@@ -70,7 +70,8 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .dchip .lab{display:block;font-size:11px;margin-top:3px;font-weight:700;min-height:13px}
 .dchip.w-done{background:color-mix(in srgb,var(--accent) 16%,var(--surface));color:var(--accent)}
 .dchip.w-done b{color:var(--accent)}
-.dchip.w-missed .lab{color:var(--danger)}
+.dchip.w-missed{background:transparent;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--ink) 35%,transparent)}
+.dchip.w-missed .lab{color:var(--ink)}
 .dchip[aria-pressed="true"] .lab{color:var(--accent-ink)}
 .wplate{display:flex;align-items:center;gap:14px;padding:16px}
 .wplate .big2{font-size:20px;font-weight:700;letter-spacing:-.02em}
@@ -95,10 +96,15 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mdots{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .md{width:15px;height:15px;border-radius:50%;border:2px solid color-mix(in srgb,var(--hero-ink) 35%,transparent)}
 .md.done{background:var(--hero-acc);border-color:var(--hero-acc)}
-.md.missed{background:#FF6B52;border-color:#FF6B52}
+.md.missed{position:relative;border-color:color-mix(in srgb,var(--hero-ink) 55%,transparent)}
+.md.missed::before,.md.missed::after{content:"";position:absolute;left:50%;top:50%;width:13px;height:2px;border-radius:2px;background:var(--hero-ink);transform:translate(-50%,-50%) rotate(45deg)}
+.md.missed::after{transform:translate(-50%,-50%) rotate(-45deg)}
 .md.today{border-color:var(--hero-ink);box-shadow:0 0 0 2px color-mix(in srgb,var(--hero-ink) 25%,transparent)}
-.mx{margin-top:10px;font-size:13px;font-weight:700;color:#fff;background:#E2452C;border-radius:99px;padding:3px 10px}
-.streak{background:var(--surface);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 6px}
+.mx{margin-top:10px;font-size:13px;font-weight:700;color:var(--hero-ink);background:color-mix(in srgb,var(--hero-ink) 16%,transparent);border:1.5px dashed color-mix(in srgb,var(--hero-ink) 60%,transparent);border-radius:99px;padding:2px 10px}
+.scol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.rec{background:var(--surface);border-radius:16px;padding:9px 6px;text-align:center;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.rec b{color:var(--ink);font-size:15px;margin-left:4px;font-variant-numeric:tabular-nums}
+.streak{flex:1;background:var(--surface);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 6px}
 .streak b{font-size:56px;line-height:1;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
 .streak span{font-weight:700;margin-top:8px;font-size:15px}
 .streak small{font-size:12px;color:var(--muted);margin-top:2px}
@@ -108,7 +114,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mc{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);line-height:1.1}
 .mc i{font-style:normal;font-size:9px;font-weight:800;margin-top:2px}
 .mc.c-done{background:var(--accent);color:var(--accent-ink)}
-.mc.c-miss{background:color-mix(in srgb,var(--danger) 18%,transparent);color:var(--danger)}
+.mc.c-miss{background:transparent;border:2px dashed color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink)}
 .mc.c-today{box-shadow:inset 0 0 0 2px var(--accent);color:var(--ink)}
 .mc.c-plan{background:var(--soft);color:var(--ink)}
 .rings{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px}
@@ -461,17 +467,17 @@ function sportBlock(){
       <div class="mdots">${ms.list.map(([,,s3])=>`<span class="md ${s3}"></span>`).join('')}</div>
       ${ms.missed?`<span class="mx">пропущено ${ms.missed}</span>`:''}
     </div>
-    <div class="streak${cur?'':' zero'}"><b>${cur}</b><span>серия</span><small>рекорд ${best}</small></div>
+    <div class="scol"><div class="rec">Рекорд<b>${best}</b></div><div class="streak${cur?'':' zero'}"><b>${cur}</b><span>серия</span></div></div>
   </div>
   <section><div class="sh"><h2>${esc(L('h_trainings'))}</h2><button class="act" data-act="sheet" data-type="sport">Изменить</button></div>
     <div class="wk"><button data-act="swk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${sportWeek===0?'Эта неделя':sportWeek===1?'Следующая неделя':sportWeek===-1?'Прошлая неделя':days[0].getDate()+' '+MONTHS[days[0].getMonth()]+' – '+days[6].getDate()+' '+MONTHS[days[6].getMonth()]}</span><button data-act="swk" data-d="1" aria-label="Следующая неделя">›</button></div>
-    <div class="days">${days.map(x=>{const k=ymd(x),ww=workoutOn(k),s2=wStatus(k);return `<button class="dchip${s2==='done'?' w-done':s2==='missed'?' w-missed':''}" aria-pressed="${k===sportDay}" data-act="sday" data-id="${k}">${WD_SHORT[WD[x.getDay()]]}<b>${x.getDate()}</b><span class="lab">${ww?(s2==='done'?'✓':esc(wShort(ww))):''}</span></button>`}).join('')}</div>
+    <div class="days">${days.map(x=>{const k=ymd(x),ww=workoutOn(k),s2=wStatus(k);return `<button class="dchip${s2==='done'?' w-done':s2==='missed'?' w-missed':''}" aria-pressed="${k===sportDay}" data-act="sday" data-id="${k}">${WD_SHORT[WD[x.getDay()]]}<b>${x.getDate()}</b><span class="lab">${ww?(s2==='done'?'✓':s2==='missed'?'✕':esc(wShort(ww))):''}</span></button>`}).join('')}</div>
     <div class="card">${plate}</div>
   </section>
   <section><div class="sh"><h2>${MONTHS_NOM[M]}</h2><span class="rs">${pct(ms)}% выполнено</span></div>
     <div class="card">
       <div class="mcal">${cal}</div>
-      <div class="rings">${['up','low'].map(g=>{const b=ms.by[g];return `<div class="rcard">${miniRing(b.d,b.p)}<div><b>${esc(L('g_'+g))}</b><span>${b.d} из ${b.p}${b.m?` · пропуск ${b.m}`:''}</span></div></div>`}).join('')}</div>
+      <div class="rings">${['up','low'].map(g=>{const b=ms.by[g];return `<div class="rcard">${miniRing(b.d,b.t)}<div><b>${esc(L('g_'+g))}</b><span>${b.d} из ${b.t}</span></div></div>`}).join('')}</div>
       ${ms.missList.length?`<p class="fl" style="padding:0 16px 8px">Пропущено</p><div class="mchips">${ms.missList.map(([ds,ww])=>{const x=new Date(ds+'T12:00');return `<span class="mchip">${x.getDate()} ${MONTHS[x.getMonth()]} · ${esc(wName(ww))}</span>`}).join('')}</div>`:''}
     </div>
   </section>

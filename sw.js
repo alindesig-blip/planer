@@ -1,5 +1,5 @@
 // Офлайн-режим: сначала пробуем сеть (чтобы обновления приходили), без сети берём из кэша.
-const CACHE = 'planer-v7';
+const CACHE = 'planer-v8';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
