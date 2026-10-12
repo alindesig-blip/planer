@@ -70,7 +70,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .dchip .lab{display:block;font-size:11px;margin-top:3px;font-weight:700;min-height:13px}
 .dchip.w-done{background:color-mix(in srgb,var(--accent) 16%,var(--surface));color:var(--accent)}
 .dchip.w-done b{color:var(--accent)}
-.dchip.w-missed{background:transparent;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--ink) 35%,transparent)}
+.dchip.w-missed{background:transparent;border:2px dashed color-mix(in srgb,var(--ink) 40%,transparent)}
 .dchip.w-missed .lab{color:var(--ink)}
 .dchip[aria-pressed="true"] .lab{color:var(--accent-ink)}
 .wplate{display:flex;align-items:center;gap:14px;padding:16px}
@@ -96,14 +96,12 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mdots{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .md{width:15px;height:15px;border-radius:50%;border:2px solid color-mix(in srgb,var(--hero-ink) 35%,transparent)}
 .md.done{background:var(--hero-acc);border-color:var(--hero-acc)}
-.md.missed{position:relative;border-color:color-mix(in srgb,var(--hero-ink) 55%,transparent)}
-.md.missed::before,.md.missed::after{content:"";position:absolute;left:50%;top:50%;width:13px;height:2px;border-radius:2px;background:var(--hero-ink);transform:translate(-50%,-50%) rotate(45deg)}
-.md.missed::after{transform:translate(-50%,-50%) rotate(-45deg)}
 .md.today{border-color:var(--hero-ink);box-shadow:0 0 0 2px color-mix(in srgb,var(--hero-ink) 25%,transparent)}
 .mx{margin-top:10px;font-size:13px;font-weight:700;color:var(--hero-ink);background:color-mix(in srgb,var(--hero-ink) 16%,transparent);border:1.5px dashed color-mix(in srgb,var(--hero-ink) 60%,transparent);border-radius:99px;padding:2px 10px}
 .scol{display:flex;flex-direction:column;gap:8px;min-width:0}
-.rec{background:var(--surface);border-radius:16px;padding:9px 6px;text-align:center;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
-.rec b{color:var(--ink);font-size:15px;margin-left:4px;font-variant-numeric:tabular-nums}
+.rec{background:var(--surface);border-radius:18px;padding:10px 8px 9px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.rec b{color:var(--ink);font-size:26px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.rec span{font-size:12px;font-weight:600;color:var(--muted)}
 .streak{flex:1;background:var(--surface);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 6px}
 .streak b{font-size:56px;line-height:1;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
 .streak span{font-weight:700;margin-top:8px;font-size:15px}
@@ -114,7 +112,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mc{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);line-height:1.1}
 .mc i{font-style:normal;font-size:9px;font-weight:800;margin-top:2px}
 .mc.c-done{background:var(--accent);color:var(--accent-ink)}
-.mc.c-miss{background:transparent;border:2px dashed color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink)}
+.mc.c-miss{border:2px dashed color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink);background:linear-gradient(to top right,transparent calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% + 1px),transparent calc(50% + 1px))}
 .mc.c-today{box-shadow:inset 0 0 0 2px var(--accent);color:var(--ink)}
 .mc.c-plan{background:var(--soft);color:var(--ink)}
 .rings{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px}
@@ -266,7 +264,11 @@ const TABS=[{id:'today',name:'Сегодня',icon:'sun'},{id:'study',name:'Уч
 const LIFE=[{id:'work',name:'Работа'},{id:'health',name:'Спорт'},{id:'personal',name:'Личное'}];
 const LABELS={today:'Сегодня',study:'Учёба',studySub:'1-й семестр',life:'Жизнь',more:'Ещё',work:'Работа',health:'Спорт',personal:'Личное',
   h_pairs:'Пары',h_workout:'Тренировка',h_plan:'План',h_behind:'Не успела',h_rasp:'Расписание',h_progress:'Прогресс',h_projects:'Проекты',h_misc:'Разное',h_later:'Отложено',h_trainings:'Тренировки',h_months:'По месяцам',
-  w_up1:'Верх 1',w_low1:'Низ 1',w_up2:'Верх 2',w_low2:'Низ 2',g_up:'Верх',g_low:'Низ'};
+  w_up1:'Верх 1',w_low1:'Низ 1',w_up2:'Верх 2',w_low2:'Низ 2',g_up:'Верх',g_low:'Низ',
+  t_cleanup:'Убрать готовые',t_frompro:'+ Из проектов',t_newtask:'Новая задача',t_quick:'Быстрое дело',t_allnow:'Всё на сегодня',t_edit:'Изменить',t_new:'+ Новый',
+  t_thisweek:'Эта неделя',t_rest:'Отдых',t_mark:'Отметить',t_was:'Была',t_record:'рекорд',t_streak:'серия',t_inmonth:'в месяце',t_done_pct:'выполнено',t_missed:'Пропущено',
+  t_sportsched:'Расписание тренировок',t_w_ok:'засчитано в серию',t_w_todo:'отметь, когда сходишь',
+  m_design:'Оформление',m_archive:'Выполненные',m_trash:'Недавно удалённые',m_labels:'Названия разделов',m_backup:'Резервная копия'};
 const LIFE_IDS=['health','work','personal'];
 const lifeOrder=()=>{const o=D&&D.lifeOrder;return Array.isArray(o)&&o.length===3&&LIFE_IDS.every(x=>o.includes(x))?o:LIFE_IDS.slice()};
 const L=k=>((D&&D.labels&&D.labels[k])||LABELS[k]||'');
@@ -443,14 +445,14 @@ function sportBlock(){
   if(!sportDay||!days.some(d=>ymd(d)===sportDay)){const tr=days.find(d=>workoutOn(ymd(d))&&ymd(d)>=t);sportDay=sportWeek===0?t:ymd(tr||days[0])}
   const w=workoutOn(sportDay),st=wStatus(sportDay),sd=new Date(sportDay+'T12:00');
   const plate=w?`<div class="wplate"><div class="grow"><div class="big2">${esc(wName(w))}</div><p class="rs">${WD_FULL[WD[sd.getDay()]]}, ${sd.getDate()} ${MONTHS[sd.getMonth()]}${st==='missed'?' · <span style="color:var(--danger)">пропущена</span>':''}</p></div>
-      ${st==='future'?`<button class="wcheck" disabled>Впереди</button>`:`<button class="wcheck${st==='done'?' ok':''}" data-act="wdone" data-id="${sportDay}">${st==='done'?'✓ Была':'Отметить'}</button>`}</div>`
-    :`<p class="empty">Отдых</p>`;
+      ${st==='future'?`<button class="wcheck" disabled>Впереди</button>`:`<button class="wcheck${st==='done'?' ok':''}" data-act="wdone" data-id="${sportDay}">${st==='done'?'✓ '+esc(L('t_was')):esc(L('t_mark'))}</button>`}</div>`
+    :`<p class="empty">${esc(L('t_rest'))}</p>`;
   // календарь месяца
   const first=new Date(Y,M,1,12),lead=(first.getDay()+6)%7,nd=new Date(Y,M+1,0).getDate();
   let cal=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(x=>`<span class="mh">${x}</span>`).join('')+'<span></span>'.repeat(lead);
   for(let i=1;i<=nd;i++){const ds=`${Y}-${pad(M+1)}-${pad(i)}`,ww=workoutOn(ds),s2=wStatus(ds);
     const cls=s2==='done'?'c-done':s2==='missed'?'c-miss':s2==='today'?'c-today':s2==='future'?'c-plan':'';
-    cal+=`<span class="mc ${cls}">${i}${ww?`<i>${s2==='done'?'✓':s2==='missed'?'✕':esc(wShort(ww))}</i>`:''}</span>`}
+    cal+=`<span class="mc ${cls}">${i}${ww?`<i>${s2==='done'?'✓':esc(wShort(ww))}</i>`:''}</span>`}
   // история по месяцам
   const months=[];let d=new Date(D.sport.start.slice(0,7)+'-01T12:00');
   while(ymd(d).slice(0,7)<=t.slice(0,7)){months.push([d.getFullYear(),d.getMonth()]);d=new Date(d.getFullYear(),d.getMonth()+1,1,12)}
@@ -463,22 +465,22 @@ function sportBlock(){
     <div class="hero mhero">
       <p class="lbl" style="margin:0;font-weight:600">${MONTHS_NOM[M]}</p>
       <div class="big">${ms.done}<small> / ${ms.total}</small></div>
-      <p class="lbl" style="margin:0">${plural(ms.total,'тренировка','тренировки','тренировок')} в месяце</p>
+      <p class="lbl" style="margin:0">${plural(ms.total,'тренировка','тренировки','тренировок')} ${esc(L('t_inmonth'))}</p>
       <div class="mdots">${ms.list.map(([,,s3])=>`<span class="md ${s3}"></span>`).join('')}</div>
       ${ms.missed?`<span class="mx">пропущено ${ms.missed}</span>`:''}
     </div>
-    <div class="scol"><div class="rec">Рекорд<b>${best}</b></div><div class="streak${cur?'':' zero'}"><b>${cur}</b><span>серия</span></div></div>
+    <div class="scol"><div class="rec"><b>${best}</b><span>${esc(L('t_record'))}</span></div><div class="streak${cur?'':' zero'}"><b>${cur}</b><span>${esc(L('t_streak'))}</span></div></div>
   </div>
-  <section><div class="sh"><h2>${esc(L('h_trainings'))}</h2><button class="act" data-act="sheet" data-type="sport">Изменить</button></div>
-    <div class="wk"><button data-act="swk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${sportWeek===0?'Эта неделя':sportWeek===1?'Следующая неделя':sportWeek===-1?'Прошлая неделя':days[0].getDate()+' '+MONTHS[days[0].getMonth()]+' – '+days[6].getDate()+' '+MONTHS[days[6].getMonth()]}</span><button data-act="swk" data-d="1" aria-label="Следующая неделя">›</button></div>
-    <div class="days">${days.map(x=>{const k=ymd(x),ww=workoutOn(k),s2=wStatus(k);return `<button class="dchip${s2==='done'?' w-done':s2==='missed'?' w-missed':''}" aria-pressed="${k===sportDay}" data-act="sday" data-id="${k}">${WD_SHORT[WD[x.getDay()]]}<b>${x.getDate()}</b><span class="lab">${ww?(s2==='done'?'✓':s2==='missed'?'✕':esc(wShort(ww))):''}</span></button>`}).join('')}</div>
+  <section><div class="sh"><h2>${esc(L('h_trainings'))}</h2><button class="act" data-act="sheet" data-type="sport">${esc(L('t_edit'))}</button></div>
+    <div class="wk"><button data-act="swk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${sportWeek===0?L('t_thisweek'):sportWeek===1?'Следующая неделя':sportWeek===-1?'Прошлая неделя':days[0].getDate()+' '+MONTHS[days[0].getMonth()]+' – '+days[6].getDate()+' '+MONTHS[days[6].getMonth()]}</span><button data-act="swk" data-d="1" aria-label="Следующая неделя">›</button></div>
+    <div class="days">${days.map(x=>{const k=ymd(x),ww=workoutOn(k),s2=wStatus(k);return `<button class="dchip${s2==='done'?' w-done':s2==='missed'?' w-missed':''}" aria-pressed="${k===sportDay}" data-act="sday" data-id="${k}">${WD_SHORT[WD[x.getDay()]]}<b>${x.getDate()}</b><span class="lab">${ww?(s2==='done'?'✓':esc(wShort(ww))):''}</span></button>`}).join('')}</div>
     <div class="card">${plate}</div>
   </section>
-  <section><div class="sh"><h2>${MONTHS_NOM[M]}</h2><span class="rs">${pct(ms)}% выполнено</span></div>
+  <section><div class="sh"><h2>${MONTHS_NOM[M]}</h2><span class="rs">${pct(ms)}% ${esc(L('t_done_pct'))}</span></div>
     <div class="card">
       <div class="mcal">${cal}</div>
       <div class="rings">${['up','low'].map(g=>{const b=ms.by[g];return `<div class="rcard">${miniRing(b.d,b.t)}<div><b>${esc(L('g_'+g))}</b><span>${b.d} из ${b.t}</span></div></div>`}).join('')}</div>
-      ${ms.missList.length?`<p class="fl" style="padding:0 16px 8px">Пропущено</p><div class="mchips">${ms.missList.map(([ds,ww])=>{const x=new Date(ds+'T12:00');return `<span class="mchip">${x.getDate()} ${MONTHS[x.getMonth()]} · ${esc(wName(ww))}</span>`}).join('')}</div>`:''}
+      ${ms.missList.length?`<p class="fl" style="padding:0 16px 8px">${esc(L('t_missed'))}</p><div class="mchips">${ms.missList.map(([ds,ww])=>{const x=new Date(ds+'T12:00');return `<span class="mchip">${x.getDate()} ${MONTHS[x.getMonth()]} · ${esc(wName(ww))}</span>`}).join('')}</div>`:''}
     </div>
   </section>
   <section><div class="sh"><h2>${esc(L('h_months'))}</h2>${bestM?`<span class="rs">лучший — ${MONTHS_NOM[bestM.m].toLowerCase()}</span>`:''}</div>
@@ -493,7 +495,7 @@ function toggleWorkout(ds){
 }
 function sheetSport(){
   const days=sportPlanFor(T());
-  return ['Расписание тренировок',`<div class="card">${WEEK.map(d=>`<div class="er"><b style="width:28px;color:var(--muted);font-size:14px">${WD_SHORT[d]}</b><span class="grow"></span><select id="sp-${d}" data-sp="${d}" aria-label="${WD_FULL[d]}"><option value="">Отдых</option>${WT_KEYS.map(k=>`<option value="${k}"${days[d]===k?' selected':''}>${esc(wName(k))}</option>`).join('')}</select></div>`).join('')}</div>
+  return [L('t_sportsched'),`<div class="card">${WEEK.map(d=>`<div class="er"><b style="width:28px;color:var(--muted);font-size:14px">${WD_SHORT[d]}</b><span class="grow"></span><select id="sp-${d}" data-sp="${d}" aria-label="${WD_FULL[d]}"><option value="">${esc(L('t_rest'))}</option>${WT_KEYS.map(k=>`<option value="${k}"${days[d]===k?' selected':''}>${esc(wName(k))}</option>`).join('')}</select></div>`).join('')}</div>
     <button class="wide solid" data-act="save-sport">Сохранить</button>
     <p class="rs" style="white-space:normal;padding:10px 4px;text-align:center">Новое расписание действует с сегодняшнего дня, прошлые тренировки не меняются</p>`];
 }
@@ -555,7 +557,7 @@ function weekBlock(){
   const lbl=mon.getMonth()===end.getMonth()?`${mon.getDate()}–${end.getDate()} ${MONTHS[end.getMonth()]}`:`${mon.getDate()} ${MONTHS[mon.getMonth()]} – ${end.getDate()} ${MONTHS[end.getMonth()]}`;
   const c=D.raspCache[ymd(mon)];
   return `<section><div class="sh"><h2>${esc(L('h_rasp'))}</h2><button class="act" data-act="sheet" data-type="schedule">${esc((D.rasp&&D.rasp.groupName)||'Группа')}</button></div>
-    <div class="wk"><button data-act="wk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${raspWeek===0?'Эта неделя':raspWeek===1?'Следующая неделя':lbl}</span><button data-act="wk" data-d="1" aria-label="Следующая неделя">›</button></div>
+    <div class="wk"><button data-act="wk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${raspWeek===0?L('t_thisweek'):raspWeek===1?'Следующая неделя':lbl}</span><button data-act="wk" data-d="1" aria-label="Следующая неделя">›</button></div>
     <div class="days">${days.map(d=>{const k=ymd(d),has=c&&c.items.some(x=>x.d===k);return `<button class="dchip" aria-pressed="${k===raspDay}" data-act="rday" data-id="${k}">${WD_SHORT[WD[d.getDay()]]}<b>${d.getDate()}</b><span class="dot2${has?'':' no'}"></span></button>`}).join('')}</div>
     ${pairsList(raspDay)}</section>`;
 }
@@ -610,16 +612,16 @@ function viewToday(){
     ${ring(u.d,u.n)}
   </div>
   <section><div class="sh"><h2>${esc(L('h_pairs'))}</h2></div>${pairsList(t)}</section>
-  ${(()=>{const w=workoutOn(t);if(!w)return '';const ok=!!D.sport.log[t];return `<section><div class="sh"><h2>${esc(L('h_workout'))}</h2></div><div class="card"><div class="row${ok?' done':''}"><button class="chk" data-act="wdone" data-id="${t}" aria-label="${ok?'Снять отметку':'Отметить тренировку'}">${ICON.check}</button><button class="rm" data-act="wdone" data-id="${t}"><span class="rt">${esc(wName(w))}</span><span class="rs">${ok?'засчитано в серию':'отметь, когда сходишь'}</span></button></div></div></section>`})()}
+  ${(()=>{const w=workoutOn(t);if(!w)return '';const ok=!!D.sport.log[t];return `<section><div class="sh"><h2>${esc(L('h_workout'))}</h2></div><div class="card"><div class="row${ok?' done':''}"><button class="chk" data-act="wdone" data-id="${t}" aria-label="${ok?'Снять отметку':'Отметить тренировку'}">${ICON.check}</button><button class="rm" data-act="wdone" data-id="${t}"><span class="rt">${esc(wName(w))}</span><span class="rs">${esc(ok?L('t_w_ok'):L('t_w_todo'))}</span></button></div></div></section>`})()}
   <section>
-    <div class="sh"><h2>${esc(L('h_plan'))}</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">Убрать готовые</button>`:''}</div>
+    <div class="sh"><h2>${esc(L('h_plan'))}</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>
     <div class="card">
       ${todays.map(([id,x])=>taskRow(id,x,{sub:true,plan:true})).join('')}
-      ${addRow('today-new','Новая задача','today')}
+      ${addRow('today-new',esc(L('t_newtask')),'today')}
     </div>
-    <button class="wide" data-act="sheet" data-type="pick">+ Из проектов</button>
+    <button class="wide" data-act="sheet" data-type="pick">${esc(L('t_frompro'))}</button>
   </section>
-  ${behind.length?`<section><div class="sh"><h2>${esc(L('h_behind'))}</h2><button class="act" data-act="move-all">Всё на сегодня</button></div><div class="card">${behind.map(([id,x])=>taskRow(id,x,{sub:true,move:true})).join('')}</div></section>`:''}`;
+  ${behind.length?`<section><div class="sh"><h2>${esc(L('h_behind'))}</h2><button class="act" data-act="move-all">${esc(L('t_allnow'))}</button></div><div class="card">${behind.map(([id,x])=>taskRow(id,x,{sub:true,move:true})).join('')}</div></section>`:''}`;
 }
 
 function projCard(id,p){
@@ -636,7 +638,7 @@ function projCard(id,p){
       <div class="bar"><i style="width:${u.n?Math.round(u.d/u.n*100):0}%"></i></div>
     </button>
     ${isOpen?`${shown.map(([tid,t])=>taskRow(tid,t)).join('')}${addRow('add-'+id,'Задача','sub',`data-id="${id}"`)}
-      <div class="ptools"><button class="tool" data-act="sheet" data-type="edit" data-id="${id}">Изменить</button>${dn.length?`<button class="tool" data-act="archive" data-ids="${dn.join(',')}">Убрать готовые</button>`:''}</div>`:''}
+      <div class="ptools"><button class="tool" data-act="sheet" data-type="edit" data-id="${id}">${esc(L('t_edit'))}</button>${dn.length?`<button class="tool" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>`:''}
   </div>`;
 }
 
@@ -661,12 +663,12 @@ function areaBlock(area,extra='',noHero=false){
   ${extra}
   ${chart.length>1?`<section><div class="sh"><h2>${esc(L('h_progress'))}</h2></div><div class="card chart">${chart.map(([k,g])=>`<div class="cr" style="--c:${g.c}"><span class="cl">${esc(k)}</span><span class="cn">${g.d}/${g.n}</span><div class="bar"><i style="width:${Math.round(g.d/g.n*100)}%"></i></div></div>`).join('')}</div></section>`:''}
   <section>
-    <div class="sh"><h2>${esc(L('h_projects'))}</h2><button class="act" data-act="sheet" data-type="new" data-area="${area}">+ Новый</button></div>
-    ${active.length?active.map(([id,p])=>projCard(id,p)).join(''):`<div class="card"><p class="empty">Нажми «+ Новый», чтобы добавить проект</p></div>`}
+    <div class="sh"><h2>${esc(L('h_projects'))}</h2><button class="act" data-act="sheet" data-type="new" data-area="${area}">${esc(L('t_new'))}</button></div>
+    ${active.length?active.map(([id,p])=>projCard(id,p)).join(''):`<div class="card"><p class="empty">Нажми «${esc(L('t_new'))}», чтобы добавить проект</p></div>`}
   </section>
   <section>
-    <div class="sh"><h2>${esc(L('h_misc'))}</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">Убрать готовые</button>`:''}</div>
-    <div class="card">${loose.map(([id,t])=>taskRow(id,t)).join('')}${addRow('loose-'+area,'Быстрое дело','loose',`data-area="${area}"`)}</div>
+    <div class="sh"><h2>${esc(L('h_misc'))}</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>
+    <div class="card">${loose.map(([id,t])=>taskRow(id,t)).join('')}${addRow('loose-'+area,esc(L('t_quick')),'loose',`data-area="${area}"`)}</div>
   </section>
   ${later.length?`<section><div class="sh"><h2>${esc(L('h_later'))}</h2></div>${later.map(([id,p])=>projCard(id,p)).join('')}</section>`:''}`;
 }
@@ -685,16 +687,16 @@ function viewMore(){
   const lb=D.lastBackup?(()=>{const[,m,d]=D.lastBackup.split('-').map(Number);return d+' '+MONTHS[m-1]})():'не было';
   const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
   return `<div class="top"><h1>${esc(L('more'))}</h1></div>
-  <section style="margin-top:0"><div class="sh"><h2>Оформление</h2></div>
+  <section style="margin-top:0"><div class="sh"><h2>${esc(L('m_design'))}</h2></div>
     <div class="card">${themeGrid(k=>!THEMES[k].group)}</div>
     <p class="fl">NUDAKE</p>
     <div class="card">${themeGrid(k=>THEMES[k].group==='nudake')}</div>
   </section>
   <section><div class="card">
-    <button class="li" data-act="sheet" data-type="archive"><span class="lt">Выполненные</span><span class="lv">${arch}</span>${ICON.chev}</button>
-    <button class="li" data-act="sheet" data-type="trash"><span class="lt">Недавно удалённые</span><span class="lv">${D.trash.length}</span>${ICON.chev}</button>
-    <button class="li" data-act="sheet" data-type="labels"><span class="lt">Названия разделов</span>${ICON.chev}</button>
-    <button class="li" data-act="sheet" data-type="backup"><span class="lt">Резервная копия</span><span class="lv">${lb}</span>${ICON.chev}</button>
+    <button class="li" data-act="sheet" data-type="archive"><span class="lt">${esc(L('m_archive'))}</span><span class="lv">${arch}</span>${ICON.chev}</button>
+    <button class="li" data-act="sheet" data-type="trash"><span class="lt">${esc(L('m_trash'))}</span><span class="lv">${D.trash.length}</span>${ICON.chev}</button>
+    <button class="li" data-act="sheet" data-type="labels"><span class="lt">${esc(L('m_labels'))}</span>${ICON.chev}</button>
+    <button class="li" data-act="sheet" data-type="backup"><span class="lt">${esc(L('m_backup'))}</span><span class="lv">${lb}</span>${ICON.chev}</button>
   </div></section>
   ${standalone?'':`<section><div class="card pad"><p style="font-weight:600;margin-bottom:6px">Установить на iPhone</p><p class="rs" style="white-space:normal">Safari → «Поделиться» → «На экран Домой»</p></div></section>`}`;
 }
@@ -724,7 +726,7 @@ function sheetEdit(pid){
     <p class="fl">Дедлайн</p><input class="field" type="date" id="e-dl" data-pedit="deadline" value="${esc(p.deadline||'')}">
     <p class="fl">Задачи</p>
     <div class="card">${ts.map(t=>`<div class="er"><input id="et-${t[0]}" data-edit="title" data-id="${t[0]}" value="${esc(t[1].title)}" aria-label="Задача">${tgt(t)}<button class="ib danger" data-act="del" data-id="${t[0]}" aria-label="Удалить задачу">${ICON.x}</button></div>`).join('')}
-    ${addRow('e-add','Новая задача','sub',`data-id="${pid}"`)}</div>
+    ${addRow('e-add',esc(L('t_newtask')),'sub',`data-id="${pid}"`)}</div>
     <button class="wide" data-act="later" data-id="${pid}">${p.later?'Вернуть в работу':'Отложить'}</button>
     <button class="wide danger" data-act="pdel" data-id="${pid}">Удалить проект</button>`];
 }
@@ -777,7 +779,12 @@ function sheetLabels(){
     <p class="fl">Разделы «Жизни» — порядок и названия</p>
     <div class="card">${ord.map((id,n)=>`<div class="er"><input id="lb-${id}" data-label="${id}" value="${esc(v(id))}" placeholder="${esc(LABELS[id])}" autocomplete="off"><button class="ib" data-act="lo" data-id="${id}" data-d="-1" aria-label="Выше"${n===0?' disabled style="opacity:.3"':''}>↑</button><button class="ib" data-act="lo" data-id="${id}" data-d="1" aria-label="Ниже"${n===ord.length-1?' disabled style="opacity:.3"':''}>↓</button></div>`).join('')}</div>
     ${grp('Заголовки на экранах',[['h_pairs','Пары'],['h_workout','Тренировка (Сегодня)'],['h_plan','План'],['h_behind','Не успела'],['h_rasp','Расписание'],['h_progress','Прогресс'],['h_projects','Проекты'],['h_misc','Разное'],['h_later','Отложено'],['h_trainings','Тренировки'],['h_months','По месяцам']])}
-    ${grp('Тренировки',[['w_up1','Тренировка 1'],['w_low1','Тренировка 2'],['w_up2','Тренировка 3'],['w_low2','Тренировка 4'],['g_up','Группа «верх»'],['g_low','Группа «низ»']])}
+    ${(()=>{const plan=sportPlanFor(T()),dayOf=k=>{const d=WEEK.find(x=>plan[x]===k);return d?WD_SHORT[d]:'—'};
+      return grp('Названия тренировок',WT_KEYS.map(k=>['w_'+k,'Тренировка по '+(dayOf(k)==='—'?'расписанию':dayOf(k).toLowerCase().replace('пн','понедельникам').replace('вт','вторникам').replace('ср','средам').replace('чт','четвергам').replace('пт','пятницам').replace('сб','субботам').replace('вс','воскресеньям'))]))})()}
+    ${grp('Подписи колец в статистике',[['g_up','Кольцо 1 (тренировки «верх»)'],['g_low','Кольцо 2 (тренировки «низ»)']])}
+    ${grp('Спорт',[['t_record','Подпись рекорда'],['t_streak','Подпись серии'],['t_inmonth','«в месяце»'],['t_mark','Кнопка «Отметить»'],['t_was','Отмечено («Была»)'],['t_rest','День без тренировки'],['t_missed','Список пропусков'],['t_done_pct','«выполнено»'],['t_sportsched','Окно расписания'],['t_w_ok','Тренировка отмечена'],['t_w_todo','Тренировка не отмечена']])}
+    ${grp('Кнопки и поля',[['t_cleanup','Убрать готовые'],['t_frompro','Из проектов'],['t_newtask','Поле новой задачи'],['t_quick','Поле быстрого дела'],['t_allnow','Всё на сегодня'],['t_edit','Изменить'],['t_new','Новый проект'],['t_thisweek','Эта неделя']])}
+    ${grp('Меню «Ещё»',[['m_design','Оформление'],['m_archive','Выполненные'],['m_trash','Недавно удалённые'],['m_labels','Названия разделов'],['m_backup','Резервная копия']])}
     <button class="wide solid" data-act="save-labels">Сохранить</button>
     <p class="rs" style="white-space:normal;padding:10px 4px;text-align:center">Изменения применятся только после «Сохранить»</p>`];
 }
