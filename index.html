@@ -11,7 +11,7 @@
 <meta name="theme-color" id="meta-theme" content="#E9DFD0">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="icon-180.png">
 <style>
 /* Телефонный интерфейс: крупный заголовок экрана, цветная карточка-сводка, белые карточки на контрастном фоне, нижняя панель вкладок, редактор в нижней шторке. Цвета задаёт выбранная тема (см. THEMES в скрипте). */
 :root{
@@ -195,7 +195,20 @@ const THEMES={
   crimson:{name:'Crimson Root',bg:'#EFE1D6',surface:'#FFFAF5',ink:'#2B0F1A',muted:'#8C6F6A',line:'#F0E3D8',soft:'#F8EDE3',accent:'#C93C22',accentInk:'#FFFAF5',hero:'#4A1426',heroInk:'#FFE9DF',heroAcc:'#C9CB3E',sw:['#E04A2B','#4A1426','#C9CB3E']},
   ether:{name:'Ether & Ash',bg:'#DEDAEE',surface:'#FBFAFF',ink:'#1C1F45',muted:'#6E6B8C',line:'#E8E5F4',soft:'#EFEDF9',accent:'#3F5DC4',accentInk:'#FFFFFF',hero:'#3F5DC4',heroInk:'#F2EFFF',heroAcc:'#D4D64A',sw:['#B3A5D6','#3F5DC4','#D4D64A']},
   forest:{name:'Лес',bg:'#E2E3CC',surface:'#FCFCF3',ink:'#14301C',muted:'#6B7660',line:'#E9EAD8',soft:'#F1F2E2',accent:'#1E4A2A',accentInk:'#FCFCF3',hero:'#1E4A2A',heroInk:'#F1F3DE',heroAcc:'#E0D43A',sw:['#1E4A2A','#E0D43A','#C3C23A']},
-  night:{name:'Ночь',dark:true,bg:'#170709',surface:'#2C121A',ink:'#F3EADC',muted:'#B39893',line:'#3D1C25',soft:'#3A1922',accent:'#D4D64A',accentInk:'#1A0A0E',hero:'#5B1A26',heroInk:'#F5ECDD',heroAcc:'#D4D64A',sw:['#170709','#5B1A26','#D4D64A']}
+  night:{name:'Ночь',dark:true,bg:'#170709',surface:'#2C121A',ink:'#F3EADC',muted:'#B39893',line:'#3D1C25',soft:'#3A1922',accent:'#D4D64A',accentInk:'#1A0A0E',hero:'#5B1A26',heroInk:'#F5ECDD',heroAcc:'#D4D64A',sw:['#170709','#5B1A26','#D4D64A']},
+  /* NUDAKE: по одной теме на каждую коробку */
+  n_head:{group:'nudake',name:'Голова',bg:'#D9E3F6',surface:'#FAFBFF',ink:'#0E1F45',muted:'#5F6C8A',line:'#E6ECF8',soft:'#EDF1FB',accent:'#1F5FD0',accentInk:'#FFFFFF',hero:'#1F5FD0',heroInk:'#FFFFFF',heroAcc:'#F4A99A',sw:['#1F5FD0','#7FE3E0','#F4A99A']},
+  n_boot:{group:'nudake',name:'Сапог',bg:'#F1E4D6',surface:'#FFFAF4',ink:'#1A1210',muted:'#7E6A60',line:'#F2E7DC',soft:'#F8EEE4',accent:'#D83A22',accentInk:'#FFFAF4',hero:'#1A1210',heroInk:'#FFF3E6',heroAcc:'#F2C230',sw:['#E8432A','#F2C230','#1A1210']},
+  n_maria:{group:'nudake',name:'Мария',bg:'#D7E3D1',surface:'#F8FBF4',ink:'#14261A',muted:'#5F705F',line:'#E4ECDF',soft:'#ECF2E7',accent:'#2E5A3C',accentInk:'#F8FBF4',hero:'#2E5A3C',heroInk:'#F0F5E8',heroAcc:'#E8453A',sw:['#2E5A3C','#C9E7C3','#E0312A']},
+  n_glass:{group:'nudake',name:'Бокал',bg:'#EFD7D1',surface:'#FFF8F5',ink:'#2A0809',muted:'#875F5C',line:'#F3E2DD',soft:'#F8EAE6',accent:'#B3161C',accentInk:'#FFF8F5',hero:'#C4161C',heroInk:'#FFF1E3',heroAcc:'#F6C77E',sw:['#C4161C','#3A0A0C','#F3C27A']},
+  n_horse:{group:'nudake',name:'Лошадь',bg:'#EAD7BA',surface:'#FFF9EF',ink:'#2A1A10',muted:'#86705A',line:'#F1E5D2',soft:'#F7EEDF',accent:'#9A5E22',accentInk:'#FFF9EF',hero:'#3B2416',heroInk:'#F6E6CC',heroAcc:'#E0A458',sw:['#C98A3E','#3B2416','#F3E0C2']},
+  n_leo:{group:'nudake',name:'Леопард',bg:'#E3EAC3',surface:'#FBFCF2',ink:'#111111',muted:'#6A705A',line:'#ECF0DA',soft:'#F1F4E3',accent:'#111111',accentInk:'#D8EA4A',hero:'#111111',heroInk:'#F4F7E2',heroAcc:'#C6D93A',sw:['#C6D93A','#E8C35A','#111111']},
+  n_sphynx:{group:'nudake',name:'Сфинкс',bg:'#F0DECB',surface:'#FFFAF4',ink:'#3A2A1E',muted:'#8A7462',line:'#F3E7DA',soft:'#F8EFE5',accent:'#A8682E',accentInk:'#FFFAF4',hero:'#E9B98C',heroInk:'#3A2A1E',heroAcc:'#8A4F1E',sw:['#F2C9A0','#D5D6DA','#8A7462']},
+  n_peony:{group:'nudake',name:'Пион',bg:'#F5D9E0',surface:'#FFF8FA',ink:'#2E1520',muted:'#8E6874',line:'#F7E6EB',soft:'#FBEEF2',accent:'#C9557A',accentInk:'#FFF8FA',hero:'#4E8A3A',heroInk:'#FFF0F4',heroAcc:'#F7B6C7',sw:['#F2A9BC','#4E8A3A','#FFFFFF']},
+  n_mantis:{group:'nudake',name:'Богомол',bg:'#D9E3DF',surface:'#F9FBFA',ink:'#1D2A26',muted:'#62716B',line:'#E5ECE9',soft:'#EDF2F0',accent:'#6E58A8',accentInk:'#F9FBFA',hero:'#6E58A8',heroInk:'#F4F0FF',heroAcc:'#B9E0A0',sw:['#DCE6E3','#B9A7D9','#4F9A4E']},
+  n_braid:{group:'nudake',name:'Коса',bg:'#F2D6C5',surface:'#FFF8F3',ink:'#3A2116',muted:'#8C6B5A',line:'#F5E4D9',soft:'#FAEDE4',accent:'#D9452E',accentInk:'#FFF8F3',hero:'#8A5A3A',heroInk:'#FFEDE2',heroAcc:'#F27A5C',sw:['#F2B79A','#8A5A3A','#E2422E']},
+  n_feather:{group:'nudake',name:'Перо',bg:'#E0DEF6',surface:'#FCFBFF',ink:'#23204A',muted:'#6D6A96',line:'#EBE9FA',soft:'#F1F0FC',accent:'#5F58C0',accentInk:'#FFFFFF',hero:'#8C86D8',heroInk:'#FFFFFF',heroAcc:'#F5F3FF',sw:['#B9B4EA','#8C86D8','#FFFFFF']},
+  n_tulip:{group:'nudake',name:'Тюльпан',bg:'#DCD4E2',surface:'#FAF8FC',ink:'#241B30',muted:'#6F6480',line:'#E8E2EE',soft:'#EFEBF4',accent:'#5A4A6E',accentInk:'#FAF8FC',hero:'#4A3B5E',heroInk:'#F3EAF7',heroAcc:'#F0A23A',sw:['#5A4A6E','#F0A23A','#6E9A4A']}
 };
 function applyTheme(){
   const t=THEMES[D.theme]||THEMES.painting;const r=document.documentElement.style;
@@ -416,13 +429,18 @@ function viewLife(){
   <div class="seg" role="group">${LIFE.map(a=>`<button aria-pressed="${a.id===lifeArea}" data-act="life" data-id="${a.id}">${a.name}</button>`).join('')}</div>
   ${areaBlock(lifeArea)}`;
 }
+function themeGrid(f){
+  return `<div class="themes">${Object.entries(THEMES).filter(([k])=>f(k)).map(([k,t])=>`<button class="th" aria-pressed="${(D.theme||'painting')===k}" data-act="theme" data-id="${k}"><span class="sw">${t.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><span>${t.name}</span></button>`).join('')}</div>`;
+}
 function viewMore(){
   const arch=Object.values(D.tasks).filter(t=>t.archived).length;
   const lb=D.lastBackup?(()=>{const[,m,d]=D.lastBackup.split('-').map(Number);return d+' '+MONTHS[m-1]})():'не было';
   const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
   return `<div class="top"><h1>Ещё</h1></div>
   <section style="margin-top:0"><div class="sh"><h2>Оформление</h2></div>
-    <div class="card"><div class="themes">${Object.entries(THEMES).map(([k,t])=>`<button class="th" aria-pressed="${(D.theme||'painting')===k}" data-act="theme" data-id="${k}"><span class="sw">${t.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><span>${t.name}</span></button>`).join('')}</div></div>
+    <div class="card">${themeGrid(k=>!THEMES[k].group)}</div>
+    <p class="fl">NUDAKE</p>
+    <div class="card">${themeGrid(k=>THEMES[k].group==='nudake')}</div>
   </section>
   <section><div class="card">
     <button class="li" data-act="sheet" data-type="archive"><span class="lt">Выполненные</span><span class="lv">${arch}</span>${ICON.chev}</button>
