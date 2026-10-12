@@ -31,7 +31,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 input,select,textarea{font-size:16px}
 button{cursor:pointer;border:0;background:none;padding:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
-main.app{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+main.app{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
 .app>*{max-width:520px;margin-left:auto;margin-right:auto}
 .app{padding-inline:16px;padding-block:8px 32px}
 p{margin:0}
@@ -233,13 +233,17 @@ nav.tabs{position:relative;flex:none;z-index:5;background:color-mix(in srgb,var(
 
 /* шторка */
 .sheet-wrap{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center}
-.backdrop{position:absolute;inset:0;background:rgba(20,8,10,.38)}
+.backdrop{position:absolute;inset:0;background:rgba(20,8,10,.38);touch-action:none}
+.sheet{overflow:hidden}
 .sheet{position:relative;width:100%;max-width:520px;max-height:90vh;max-height:90dvh;background:var(--bg);border-radius:24px 24px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out}
 @keyframes up{from{transform:translateY(40px);opacity:.6}}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
 .sheet-head h2{font-size:20px}
 .sheet-head .done-btn{color:var(--accent);font-weight:700;font-size:16px;padding:6px 2px}
-.sheet-body{overflow-y:auto;padding:4px 16px calc(24px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.sheet-body{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;padding:4px 16px calc(24px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.sheet-body *{max-width:100%}
+input[type=date].field{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.dlrow .field{width:0}
 .fl{font-size:13px;color:var(--muted);padding:14px 4px 6px;font-weight:600}
 .field{display:block;width:100%;border:0;background:var(--surface);border-radius:14px;padding:13px 14px;outline:none}
 .field:focus{box-shadow:0 0 0 2px var(--accent) inset}
@@ -480,11 +484,11 @@ function sportBlock(){
   return `
   <div class="sgrid">
     <div class="hero mhero">
-      <p class="lbl" style="margin:0;font-weight:600">${MONTHS_NOM[M]}</p>
-      <div class="big">${ms.done}<small> / ${ms.total}</small></div>
-      <p class="lbl" style="margin:0">${plural(ms.total,'тренировка','тренировки','тренировок')} ${esc(L('t_inmonth'))}</p>
-      <div class="mdots">${ms.list.map(([,,s3])=>`<span class="md ${s3}"></span>`).join('')}</div>
-      ${ms.missed?`<span class="mx">пропущено ${ms.missed}</span>`:''}
+      <p class="lbl" style="margin:0;font-weight:600">${MONTHS_NOM[CM]}${CY!==Y?' '+CY:''}</p>
+      <div class="big">${cms.done}<small> / ${cms.total}</small></div>
+      <p class="lbl" style="margin:0">${plural(cms.total,'тренировка','тренировки','тренировок')} ${esc(L('t_inmonth'))}</p>
+      <div class="mdots">${cms.list.map(([,,s3])=>`<span class="md ${s3}"></span>`).join('')}</div>
+      ${cms.missed?`<span class="mx">пропущено ${cms.missed}</span>`:''}
     </div>
     <div class="scol"><div class="rec"><b>${best}</b><span>${esc(L('t_record'))}</span></div><div class="streak${cur?'':' zero'}"><b>${cur}</b><span>${esc(L('t_streak'))}</span></div></div>
   </div>
@@ -982,6 +986,8 @@ document.addEventListener('submit',e=>{
   if(k==='loose')ok=newTask({area:f.dataset.area},v);
   if(ok){i.value='';render();const n=document.getElementById(i.id);if(n){n.value='';n.focus()}}else i.focus();
 });
+document.addEventListener('focusout',()=>setTimeout(()=>{if(!document.activeElement||!document.activeElement.matches('input,textarea,select')){window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0}},80));
+window.visualViewport&&visualViewport.addEventListener('resize',()=>{if(visualViewport.height>=innerHeight-1)window.scrollTo(0,0)});
 let swipeX=null,swipeY=null;
 document.addEventListener('touchstart',e=>{const c=e.target.closest&&e.target.closest('#mcard');if(c&&e.touches.length===1){swipeX=e.touches[0].clientX;swipeY=e.touches[0].clientY}else swipeX=null},{passive:true});
 document.addEventListener('touchend',e=>{if(swipeX==null)return;const t0=e.changedTouches[0],dx=t0.clientX-swipeX,dy=t0.clientY-swipeY;swipeX=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){sportMonth+=dx<0?1:-1;render()}},{passive:true});
