@@ -112,7 +112,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mc{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);line-height:1.1}
 .mc i{font-style:normal;font-size:9px;font-weight:800;margin-top:2px}
 .mc.c-done{background:var(--accent);color:var(--accent-ink)}
-.mc.c-miss{border:2px dashed color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink);background:linear-gradient(to top right,transparent calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% - 1px),color-mix(in srgb,var(--ink) 40%,transparent) calc(50% + 1px),transparent calc(50% + 1px))}
+.mc.c-miss{border:2px dashed color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink);background:transparent}
 .mc.c-today{box-shadow:inset 0 0 0 2px var(--accent);color:var(--ink)}
 .mc.c-plan{background:var(--soft);color:var(--ink)}
 .rings{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px}
@@ -267,7 +267,7 @@ const LABELS={today:'Сегодня',study:'Учёба',studySub:'1-й семе�
   w_up1:'Верх 1',w_low1:'Низ 1',w_up2:'Верх 2',w_low2:'Низ 2',g_up:'Верх',g_low:'Низ',
   t_cleanup:'Убрать готовые',t_frompro:'+ Из проектов',t_newtask:'Новая задача',t_quick:'Быстрое дело',t_allnow:'Всё на сегодня',t_edit:'Изменить',t_new:'+ Новый',
   t_thisweek:'Эта неделя',t_rest:'Отдых',t_mark:'Отметить',t_was:'Была',t_record:'рекорд',t_streak:'серия',t_inmonth:'в месяце',t_done_pct:'выполнено',t_missed:'Пропущено',
-  t_sportsched:'Расписание тренировок',t_w_ok:'засчитано в серию',t_w_todo:'отметь, когда сходишь',
+  t_sportsched:'Расписание тренировок',t_tolater:'Отложить',t_toactive:'В работу',t_w_ok:'засчитано в серию',t_w_todo:'отметь, когда сходишь',
   m_design:'Оформление',m_archive:'Выполненные',m_trash:'Недавно удалённые',m_labels:'Названия разделов',m_backup:'Резервная копия'};
 const LIFE_IDS=['health','work','personal'];
 const lifeOrder=()=>{const o=D&&D.lifeOrder;return Array.isArray(o)&&o.length===3&&LIFE_IDS.every(x=>o.includes(x))?o:LIFE_IDS.slice()};
@@ -278,7 +278,7 @@ const WEEK=['mon','tue','wed','thu','fri','sat','sun'];
 const WD_SHORT={mon:'Пн',tue:'Вт',wed:'Ср',thu:'Чт',fri:'Пт',sat:'Сб',sun:'Вс'};
 const WD_FULL={mon:'понедельник',tue:'вторник',wed:'среда',thu:'четверг',fri:'пятница',sat:'суббота',sun:'воскресенье'};
 const MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-const FIXED_COLORS={'Дизайн книги':'s1','Фотографика':'s2','История дизайна':'s7','Проектирование':'s4','Упаковка':'s3','Веб-дизайн':'s5','Типографика':'s6','Диплом':'s8'};
+const FIXED_COLORS={'Дизайн книги':'s1','Фотографика':'s2','История дизайна':'s7','Проектирование':'s4','Упаковка':'s3','Промграфика':'s3','Веб-дизайн':'s5','Основы вебдизайна':'s5','Типографика':'s6','Диплом':'s8'};
 
 /* Темы по референсам: картина (вино, крем, лес) и три коробки VEVAI */
 const SUBJ_LIGHT={s1:'#D2442A',s2:'#8F8B12',s3:'#2F6B42',s4:'#3D59B8',s5:'#7A62A8',s6:'#B8476A',s7:'#8A2D45',s8:'#A6762A'};
@@ -336,13 +336,13 @@ function seed(){
     [['Ритм',2],['Диагональ',2],['Тень',2],['Отражение',2],['«Форма =» (Ле Корбюзье)',2],['Коллаж: 10 фото окон и дверей',1],['Реклама бытового предмета',2],['Автопортрет',1]]);
   proj('history','study','История дизайна','Две презентации','Ср','',
     ['Презентация 1','Презентация 2']);
-  proj('redesign','study','Проектирование','Редизайн «Кунжут — глина»','Чт','',
+  proj('redesign','study','Проектирование в дизайне','Редизайн «Кунжут — глина»','Чт','',
     ['Анализ бренда','Мудборд','Логотип','Цвета, шрифты, графика','Носители','Презентация']);
-  proj('brandbook','study','Проектирование','Брендбук азиатского ресторана','Чт','',
+  proj('brandbook','study','Проектирование в дизайне','Брендбук азиатского ресторана','Чт','',
     ['Концепция','Логотип','Цвета и шрифты','Паттерн и графика','Носители','Сборка брендбука']);
-  proj('pack','study','Упаковка','5 упаковок «Форма =»','Пт','',
+  proj('pack','study','Промграфика и упаковка','5 упаковок «Форма =»','Пт','',
     ['Идеи и эскизы','Упаковка 1','Упаковка 2','Упаковка 3','Упаковка 4','Упаковка 5']);
-  proj('web','study','Веб-дизайн','Сайт-портфолио','Пт','',
+  proj('web','study','Основы вебдизайна','Сайт-портфолио','Пт','',
     ['Отобрать работы','Структура','Дизайн главной','Страницы проектов','Мобильная версия','Опубликовать']);
   proj('paper','study','Типографика','Газета (антиква)','Сб','',
     ['Референсы','Формат и сетка','Шрифтовая пара','Вёрстка полос','Финальная проверка']);
@@ -351,7 +351,7 @@ function seed(){
   const schedule={days:{
     mon:[{subject:'Дизайн книги'},{subject:'Фотографика'}],tue:[],
     wed:[{subject:'История дизайна',note:'лекция'},{subject:'История дизайна',note:'практика'}],
-    thu:[{subject:'Проектирование'}],fri:[{subject:'Упаковка'},{subject:'Веб-дизайн'}],
+    thu:[{subject:'Проектирование в дизайне'}],fri:[{subject:'Промграфика и упаковка'},{subject:'Основы вебдизайна'}],
     sat:[{subject:'Типографика'}],sun:[]}};
   return{v:2,projects:P,tasks:Tk,schedule,lastBackup:'',theme:'painting',sport:newSport(),rasp:{groupId:72590,groupName:'ШДК41'},raspCache:{}};
 }
@@ -363,7 +363,7 @@ function load(){
   return seed();
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast('Не получилось сохранить')}}
-D=load();D.trash=(D.trash||[]).filter(x=>Date.now()-x.at<30*864e5);if(!D.sport)D.sport=newSport();if(!D.rasp)D.rasp={groupId:72590,groupName:'ШДК41'};if(!D.raspCache)D.raspCache={};save();
+D=load();{const MAP={'Упаковка':'Промграфика и упаковка','Проектирование':'Проектирование в дизайне','Веб-дизайн':'Основы вебдизайна'};for(const p of Object.values(D.projects||{}))if(MAP[p.subject])p.subject=MAP[p.subject];if(D.schedule&&D.schedule.days)for(const d of Object.values(D.schedule.days))d.forEach(x=>{if(MAP[x.subject])x.subject=MAP[x.subject]})}D.trash=(D.trash||[]).filter(x=>Date.now()-x.at<30*864e5);if(!D.sport)D.sport=newSport();if(!D.rasp)D.rasp={groupId:72590,groupName:'ШДК41'};if(!D.raspCache)D.raspCache={};save();
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
@@ -515,10 +515,17 @@ async function loadWeek(mon,force){
     const r=await fetch(RASP_API+'Rasp?idGroup='+D.rasp.groupId+'&sdate='+key);
     const j=await r.json();
     const items=((j.data&&j.data.rasp)||[]).map(x=>({d:String(x['дата']).slice(0,10),s:x['начало']||'',e:x['конец']||'',n:x['дисциплина']||'',a:x['аудитория']||''}));
-    D.raspCache[key]={at:Date.now(),items};
+    D.raspCache[key]={at:Date.now(),items};syncSubjects(items);
     const keys=Object.keys(D.raspCache).sort();while(keys.length>8)delete D.raspCache[keys.shift()];
     save();render(false);
   }catch(e){}finally{loading.delete(key)}
+}
+function syncSubjects(items){
+  const names=[...new Set(items.map(x=>splitDisc(x.n).name.trim()).filter(Boolean))];
+  for(const p of Object.values(D.projects)){
+    if(p.area!=='study'||!p.subject||names.includes(p.subject))continue;
+    const m=names.find(n=>subjMatch(p.subject,n));if(m)p.subject=m;
+  }
 }
 const splitDisc=n=>{const m=n.match(/^(лек|лаб|пр|практ|сем)\.?\s+(.*)$/i);return m?{type:m[1].toLowerCase(),name:m[2]}:{type:'',name:n}};
 const TYPE_NAME={'лек':'лекция','лаб':'лаб.','пр':'практика','практ':'практика','сем':'семинар'};
@@ -638,7 +645,7 @@ function projCard(id,p){
       <div class="bar"><i style="width:${u.n?Math.round(u.d/u.n*100):0}%"></i></div>
     </button>
     ${isOpen?`${shown.map(([tid,t])=>taskRow(tid,t)).join('')}${addRow('add-'+id,'Задача','sub',`data-id="${id}"`)}
-      <div class="ptools"><button class="tool" data-act="sheet" data-type="edit" data-id="${id}">${esc(L('t_edit'))}</button>${dn.length?`<button class="tool" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>`:''}
+      <div class="ptools"><button class="tool" data-act="sheet" data-type="edit" data-id="${id}">${esc(L('t_edit'))}</button><button class="tool" data-act="later" data-id="${id}">${esc(p.later?L('t_toactive'):L('t_tolater'))}</button>${dn.length?`<button class="tool" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>`:''}
   </div>`;
 }
 
@@ -650,7 +657,7 @@ function areaBlock(area,extra='',noHero=false){
   // график по предметам/категориям
   const groups={};
   for(const[id,p]of active){const k=p.subject||p.title;const g=groups[k]=groups[k]||{d:0,n:0,c:colorOf(p.subject)};const x=units(tasksOf(id));g.d+=x.d;g.n+=x.n}
-  const chart=Object.entries(groups).filter(([,g])=>g.n);
+  const chart=Object.entries(groups).filter(([k,g])=>g.n&&!/^диплом/i.test(k)),dipl=Object.entries(groups).filter(([k,g])=>g.n&&/^диплом/i.test(k));
   const dn=doneIds(loose);
   return `
   ${noHero?'':`<div class="hero">
@@ -661,7 +668,7 @@ function areaBlock(area,extra='',noHero=false){
     ${ring(u.d,u.n)}
   </div>`}
   ${extra}
-  ${chart.length>1?`<section><div class="sh"><h2>${esc(L('h_progress'))}</h2></div><div class="card chart">${chart.map(([k,g])=>`<div class="cr" style="--c:${g.c}"><span class="cl">${esc(k)}</span><span class="cn">${g.d}/${g.n}</span><div class="bar"><i style="width:${Math.round(g.d/g.n*100)}%"></i></div></div>`).join('')}</div></section>`:''}
+  ${chart.length+dipl.length>1?`<section><div class="sh"><h2>${esc(L('h_progress'))}</h2></div>${[chart,dipl].filter(x=>x.length).map(list=>`<div class="card chart">${list.map(([k,g])=>`<div class="cr" style="--c:${g.c}"><span class="cl">${esc(k)}</span><span class="cn">${g.d}/${g.n}</span><div class="bar"><i style="width:${Math.round(g.d/g.n*100)}%"></i></div></div>`).join('')}</div>`).join('')}</section>`:''}
   <section>
     <div class="sh"><h2>${esc(L('h_projects'))}</h2><button class="act" data-act="sheet" data-type="new" data-area="${area}">${esc(L('t_new'))}</button></div>
     ${active.length?active.map(([id,p])=>projCard(id,p)).join(''):`<div class="card"><p class="empty">Нажми «${esc(L('t_new'))}», чтобы добавить проект</p></div>`}
@@ -670,7 +677,7 @@ function areaBlock(area,extra='',noHero=false){
     <div class="sh"><h2>${esc(L('h_misc'))}</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">${esc(L('t_cleanup'))}</button>`:''}</div>
     <div class="card">${loose.map(([id,t])=>taskRow(id,t)).join('')}${addRow('loose-'+area,esc(L('t_quick')),'loose',`data-area="${area}"`)}</div>
   </section>
-  ${later.length?`<section><div class="sh"><h2>${esc(L('h_later'))}</h2></div>${later.map(([id,p])=>projCard(id,p)).join('')}</section>`:''}`;
+  <section><div class="sh"><h2>${esc(L('h_later'))}</h2><button class="act" data-act="sheet" data-type="new" data-area="${area}" data-later="1">${esc(L('t_new'))}</button></div>${later.length?later.map(([id,p])=>projCard(id,p)).join(''):`<div class="card"><p class="empty">Пусто</p></div>`}</section>`;
 }
 function viewArea(area){return `<div class="top"><div><h1>${esc(L('study'))}</h1>${L('studySub')?`<p class="sub">${esc(L('studySub'))}</p>`:''}</div></div>${areaBlock(area,weekBlock())}`}
 function viewLife(){
@@ -710,7 +717,7 @@ function renderSheet(){
   if(sheet.type==='edit'&&!D.projects[sheet.pid]){closeSheet();return}
   const body=document.getElementById('sheet-body');const st=body.scrollTop;
   const a=document.activeElement;const keep=a&&a.id&&body.contains(a)?a.id:null;
-  const [title,html]=sheet.type==='edit'?sheetEdit(sheet.pid):sheet.type==='new'?sheetNew(sheet.area):sheet.type==='pick'?sheetPick():sheet.type==='archive'?sheetArchive():sheet.type==='schedule'?sheetSchedule():sheet.type==='labels'?sheetLabels():sheet.type==='sport'?sheetSport():sheet.type==='trash'?sheetTrash():sheetBackup();
+  const [title,html]=sheet.type==='edit'?sheetEdit(sheet.pid):sheet.type==='new'?sheetNew(sheet.area,sheet.later):sheet.type==='pick'?sheetPick():sheet.type==='archive'?sheetArchive():sheet.type==='schedule'?sheetSchedule():sheet.type==='labels'?sheetLabels():sheet.type==='sport'?sheetSport():sheet.type==='trash'?sheetTrash():sheetBackup();
   document.getElementById('sheet-title').textContent=title;
   body.innerHTML=html;wrap.hidden=false;body.scrollTop=st;
   if(keep){const el=document.getElementById(keep);if(el)el.focus({preventScroll:true})}
@@ -730,12 +737,12 @@ function sheetEdit(pid){
     <button class="wide" data-act="later" data-id="${pid}">${p.later?'Вернуть в работу':'Отложить'}</button>
     <button class="wide danger" data-act="pdel" data-id="${pid}">Удалить проект</button>`];
 }
-function sheetNew(area){
-  return ['Новый проект',`
+function sheetNew(area,later){
+  return [later?'Новый отложенный проект':'Новый проект',`
     <p class="fl">Название</p><input class="field" id="n-title" placeholder="Например, Журнал" autocomplete="off">
     <p class="fl">${area==='study'?'Предмет':'Категория'}</p><input class="field" id="n-subj" list="subj-new" autocomplete="off">
     <datalist id="subj-new">${[...new Set(Object.values(D.projects).filter(x=>x.area===area).map(x=>x.subject).filter(Boolean))].map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
-    <button class="wide solid" data-act="create" data-area="${area}">Создать</button>`];
+    <button class="wide solid" data-act="create" data-area="${area}"${later?' data-later="1"':''}>Создать</button>`];
 }
 function sheetPick(){
   const t=T(),subj=subjectsToday();
@@ -783,7 +790,7 @@ function sheetLabels(){
       return grp('Названия тренировок',WT_KEYS.map(k=>['w_'+k,'Тренировка по '+(dayOf(k)==='—'?'расписанию':dayOf(k).toLowerCase().replace('пн','понедельникам').replace('вт','вторникам').replace('ср','средам').replace('чт','четвергам').replace('пт','пятницам').replace('сб','субботам').replace('вс','воскресеньям'))]))})()}
     ${grp('Подписи колец в статистике',[['g_up','Кольцо 1 (тренировки «верх»)'],['g_low','Кольцо 2 (тренировки «низ»)']])}
     ${grp('Спорт',[['t_record','Подпись рекорда'],['t_streak','Подпись серии'],['t_inmonth','«в месяце»'],['t_mark','Кнопка «Отметить»'],['t_was','Отмечено («Была»)'],['t_rest','День без тренировки'],['t_missed','Список пропусков'],['t_done_pct','«выполнено»'],['t_sportsched','Окно расписания'],['t_w_ok','Тренировка отмечена'],['t_w_todo','Тренировка не отмечена']])}
-    ${grp('Кнопки и поля',[['t_cleanup','Убрать готовые'],['t_frompro','Из проектов'],['t_newtask','Поле новой задачи'],['t_quick','Поле быстрого дела'],['t_allnow','Всё на сегодня'],['t_edit','Изменить'],['t_new','Новый проект'],['t_thisweek','Эта неделя']])}
+    ${grp('Кнопки и поля',[['t_cleanup','Убрать готовые'],['t_frompro','Из проектов'],['t_newtask','Поле новой задачи'],['t_quick','Поле быстрого дела'],['t_allnow','Всё на сегодня'],['t_edit','Изменить'],['t_new','Новый проект'],['t_tolater','Отложить'],['t_toactive','В работу'],['t_thisweek','Эта неделя']])}
     ${grp('Меню «Ещё»',[['m_design','Оформление'],['m_archive','Выполненные'],['m_trash','Недавно удалённые'],['m_labels','Названия разделов'],['m_backup','Резервная копия']])}
     <button class="wide solid" data-act="save-labels">Сохранить</button>
     <p class="rs" style="white-space:normal;padding:10px 4px;text-align:center">Изменения применятся только после «Сохранить»</p>`];
@@ -842,7 +849,7 @@ document.addEventListener('click',async e=>{
   if(act==='tab'){tab=id;lsSet('planer.tab',tab);window.scrollTo(0,0);render();return}
   if(act==='life'){lifeArea=id;lsSet('planer.life2',id);render();return}
   if(act==='close'){closeSheet();return}
-  if(act==='sheet'){openSheet({type:b.dataset.type,pid:id,area:b.dataset.area});return}
+  if(act==='sheet'){openSheet({type:b.dataset.type,pid:id,area:b.dataset.area,later:!!b.dataset.later});return}
   if(act==='expand'){open.has(id)?open.delete(id):open.add(id);lsSet('planer.open',[...open]);render();return}
   if(act==='theme'){D.theme=id;save();render();return}
   if(act==='toggle'&&t){
@@ -873,7 +880,7 @@ document.addEventListener('click',async e=>{
   });
   if(act==='create'){
     const title=document.getElementById('n-title').value.trim();if(!title){document.getElementById('n-title').focus();return}
-    const pid=uid('p');D.projects[pid]={title,subject:document.getElementById('n-subj').value.trim(),area:b.dataset.area,day:'',deadline:'',later:false,note:'',order:Date.now()};
+    const pid=uid('p');D.projects[pid]={title,subject:document.getElementById('n-subj').value.trim(),area:b.dataset.area,day:'',deadline:'',later:!!b.dataset.later,note:'',order:Date.now()};
     save();open.add(pid);lsSet('planer.open',[...open]);sheet={type:'edit',pid};render();
     setTimeout(()=>document.getElementById('e-add')?.focus(),50);
   }
