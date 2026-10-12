@@ -47,6 +47,24 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .hero .big small{font-size:20px;opacity:.6;font-weight:600}
 .hero .lbl{font-size:14px;opacity:.75;margin-top:6px}
 .hero .grow{flex:1;min-width:0}
+.pair{display:flex;gap:14px;align-items:center;padding:12px 16px;min-height:60px;position:relative}
+.pair + .pair::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:1px solid var(--line)}
+.pair .tm{flex:none;width:46px;font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;line-height:1.2}
+.pair .tm small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+.pair .bar-v{flex:none;width:4px;align-self:stretch;border-radius:4px;background:var(--c,var(--accent))}
+.pair.now{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.pair.past{opacity:.5}
+.days{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 12px}
+.days::-webkit-scrollbar{display:none}
+.dchip{flex:1;min-width:48px;padding:8px 6px;border-radius:14px;background:var(--surface);text-align:center;font-size:12px;color:var(--muted);font-weight:600}
+.dchip b{display:block;font-size:17px;color:var(--ink);margin-top:2px}
+.dchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.dchip[aria-pressed="true"] b{color:var(--accent-ink)}
+.dchip .dot2{display:block;width:5px;height:5px;border-radius:50%;background:currentColor;margin:4px auto 0;opacity:.6}
+.dchip .dot2.no{opacity:0}
+.wk{display:flex;align-items:center;justify-content:space-between;padding:0 4px 10px}
+.wk button{width:36px;height:36px;border-radius:12px;background:var(--surface);color:var(--accent);font-size:22px;font-weight:600;line-height:1}
+.wk span{font-weight:600}
 .hero .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .hero .chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--hero-ink) 14%,transparent);color:var(--hero-ink)}
 .ring{flex:none;width:76px;height:76px}
@@ -176,10 +194,12 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(i
 <div id="toast" class="toast" role="status" hidden></div>
 
 <script>
-const KEY='planer.v1';
+const KEY='planer.v2';
 const TABS=[{id:'today',name:'Сегодня',icon:'sun'},{id:'study',name:'Учёба',icon:'book'},{id:'life',name:'Жизнь',icon:'heart'},{id:'more',name:'Ещё',icon:'more'}];
-const LIFE=[{id:'work',name:'Работа'},{id:'health',name:'Здоровье'},{id:'personal',name:'Личное'}];
-const AREA_NAME={study:'Учёба',work:'Работа',health:'Здоровье',personal:'Личное'};
+const LIFE=[{id:'work',name:'Работа'},{id:'health',name:'Спорт'},{id:'personal',name:'Личное'}];
+const LABELS={today:'Сегодня',study:'Учёба',studySub:'1-й семестр',life:'Жизнь',work:'Работа',health:'Спорт',personal:'Личное'};
+const L=k=>((D&&D.labels&&D.labels[k])||LABELS[k]||'');
+const AREA_NAME=new Proxy({},{get:(_,k)=>L(k)});
 const WD=['sun','mon','tue','wed','thu','fri','sat'];
 const WEEK=['mon','tue','wed','thu','fri','sat','sun'];
 const WD_SHORT={mon:'Пн',tue:'Вт',wed:'Ср',thu:'Чт',fri:'Пт',sat:'Сб',sun:'Вс'};
@@ -254,13 +274,13 @@ function seed(){
   proj('paper','study','Типографика','Газета (антиква)','Сб','',
     ['Референсы','Формат и сетка','Шрифтовая пара','Вёрстка полос','Финальная проверка']);
   proj('mag','study','Типографика','Журнал','Сб','',[],true);
-  proj('diploma','study','Диплом','Диплом — парфюм','','',[],true);
+  proj('diploma','study','Диплом','Дипломная работа','','',['Доделать портфолио','Придумать темы диплома']);
   const schedule={days:{
     mon:[{subject:'Дизайн книги'},{subject:'Фотографика'}],tue:[],
     wed:[{subject:'История дизайна',note:'лекция'},{subject:'История дизайна',note:'практика'}],
     thu:[{subject:'Проектирование'}],fri:[{subject:'Упаковка'},{subject:'Веб-дизайн'}],
     sat:[{subject:'Типографика'}],sun:[]}};
-  return{v:2,projects:P,tasks:Tk,schedule,lastBackup:'',theme:'painting'};
+  return{v:2,projects:P,tasks:Tk,schedule,lastBackup:'',theme:'painting',rasp:{groupId:72590,groupName:'ШДК41'},raspCache:{}};
 }
 
 /* ---------- хранение ---------- */
@@ -270,7 +290,7 @@ function load(){
   return seed();
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast('Не получилось сохранить')}}
-D=load();save();
+D=load();if(!D.rasp)D.rasp={groupId:72590,groupName:'ШДК41'};if(!D.raspCache)D.raspCache={};save();
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
@@ -315,6 +335,68 @@ function ring(d,n){
   return `<svg class="ring" viewBox="0 0 76 76" aria-label="${Math.round(p*100)}%"><circle class="trk" cx="38" cy="38" r="30" fill="none" stroke-width="8"/><circle class="val" cx="38" cy="38" r="30" fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 38 38)"/><text x="38" y="44" text-anchor="middle">${Math.round(p*100)}%</text></svg>`;
 }
 
+/* ---------- расписание ДГТУ (edu.donstu.ru) ---------- */
+const RASP_API='https://edu.donstu.ru/api/';
+const monday=d=>{const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const acYear=()=>{const d=new Date(),y=d.getFullYear();return d.getMonth()>=7?`${y}-${y+1}`:`${y-1}-${y}`};
+const loading=new Set();
+async function loadWeek(mon,force){
+  const key=ymd(mon);
+  if(!D.rasp||!D.rasp.groupId||loading.has(key))return;
+  const c=D.raspCache[key];if(c&&!force&&Date.now()-c.at<2*3600e3)return;
+  loading.add(key);
+  try{
+    const r=await fetch(RASP_API+'Rasp?idGroup='+D.rasp.groupId+'&sdate='+key);
+    const j=await r.json();
+    const items=((j.data&&j.data.rasp)||[]).map(x=>({d:String(x['дата']).slice(0,10),s:x['начало']||'',e:x['конец']||'',n:x['дисциплина']||'',a:x['аудитория']||''}));
+    D.raspCache[key]={at:Date.now(),items};
+    const keys=Object.keys(D.raspCache).sort();while(keys.length>8)delete D.raspCache[keys.shift()];
+    save();render(false);
+  }catch(e){}finally{loading.delete(key)}
+}
+const splitDisc=n=>{const m=n.match(/^(лек|лаб|пр|практ|сем)\.?\s+(.*)$/i);return m?{type:m[1].toLowerCase(),name:m[2]}:{type:'',name:n}};
+const TYPE_NAME={'лек':'лекция','лаб':'лаб.','пр':'практика','практ':'практика','сем':'семинар'};
+function pairsOn(dateStr){
+  const c=D.raspCache[ymd(monday(new Date(dateStr+'T12:00')))];
+  if(!c)return null;
+  return c.items.filter(x=>x.d===dateStr).sort((a,b)=>a.s.localeCompare(b.s));
+}
+const norm=s=>String(s||'').toLowerCase().replace(/[^а-яёa-z]/g,'');
+function subjMatch(subject,disc){const a=norm(subject),b=norm(disc);return !!a&&!!b&&(b.includes(a)||a.includes(b))}
+function subjectsToday(){
+  const ps=pairsOn(T());
+  const subs=[...new Set(Object.values(D.projects).map(p=>p.subject).filter(Boolean))];
+  if(ps)return subs.filter(s=>ps.some(x=>subjMatch(s,splitDisc(x.n).name)));
+  return scheduleFor(WD[new Date().getDay()]).map(s=>s.subject);
+}
+function pairColor(disc){const p=Object.values(D.projects).find(p=>p.subject&&subjMatch(p.subject,disc));return p?colorOf(p.subject):'var(--accent)'}
+function pairsList(dateStr){
+  const ps=pairsOn(dateStr);
+  if(ps===null){
+    const wd=WD[new Date(dateStr+'T12:00').getDay()],man=scheduleFor(wd);
+    if(!man.length)return `<div class="card"><p class="empty">${D.rasp&&D.rasp.groupId?'Загружаю расписание…':'Пар нет'}</p></div>`;
+    return `<div class="card">${man.map(m=>`<div class="pair" style="--c:${colorOf(m.subject)}"><span class="bar-v"></span><span class="rm"><span class="rt">${esc(m.subject)}</span>${m.note?`<span class="rs">${esc(m.note)}</span>`:''}</span></div>`).join('')}</div>`;
+  }
+  if(!ps.length)return `<div class="card"><p class="empty">Пар нет</p></div>`;
+  const now=new Date(),hm=pad(now.getHours())+':'+pad(now.getMinutes()),isToday=dateStr===T();
+  return `<div class="card">${ps.map(x=>{const {type,name}=splitDisc(x.n);const st=isToday?(hm>=x.e?' past':hm>=x.s?' now':''):'';
+    return `<div class="pair${st}" style="--c:${pairColor(name)}"><span class="tm">${esc(x.s)}<small>${esc(x.e)}</small></span><span class="bar-v"></span><span class="rm"><span class="rt">${esc(name)}</span><span class="rs">${esc([TYPE_NAME[type]||type,x.a].filter(Boolean).join(' · '))}</span></span></div>`}).join('')}</div>`;
+}
+let raspWeek=0,raspDay=null;
+function weekBlock(){
+  const mon=addDays(monday(new Date()),raspWeek*7);loadWeek(mon);
+  const days=[0,1,2,3,4,5].map(i=>addDays(mon,i));
+  if(!raspDay||!days.some(d=>ymd(d)===raspDay))raspDay=raspWeek===0&&new Date().getDay()!==0?T():ymd(days[0]);
+  const end=days[5];
+  const lbl=mon.getMonth()===end.getMonth()?`${mon.getDate()}–${end.getDate()} ${MONTHS[end.getMonth()]}`:`${mon.getDate()} ${MONTHS[mon.getMonth()]} – ${end.getDate()} ${MONTHS[end.getMonth()]}`;
+  const c=D.raspCache[ymd(mon)];
+  return `<section><div class="sh"><h2>Расписание</h2></div>
+    <div class="wk"><button data-act="wk" data-d="-1" aria-label="Предыдущая неделя">‹</button><span>${raspWeek===0?'Эта неделя':raspWeek===1?'Следующая неделя':lbl}</span><button data-act="wk" data-d="1" aria-label="Следующая неделя">›</button></div>
+    <div class="days">${days.map(d=>{const k=ymd(d),has=c&&c.items.some(x=>x.d===k);return `<button class="dchip" aria-pressed="${k===raspDay}" data-act="rday" data-id="${k}">${WD_SHORT[WD[d.getDay()]]}<b>${d.getDate()}</b><span class="dot2${has?'':' no'}"></span></button>`}).join('')}</div>
+    ${pairsList(raspDay)}</section>`;
+}
+
 /* ---------- отрисовка ---------- */
 function render(withSheet=true){
   applyTheme();renderTabs();
@@ -327,7 +409,7 @@ function render(withSheet=true){
 }
 function renderTabs(){
   const n=entries(D.tasks).filter(([,x])=>!x.archived&&x.today===T()&&!isDone(x)).length;
-  document.getElementById('tabs').innerHTML=TABS.map(a=>`<button class="tab" role="tab" aria-selected="${a.id===tab}" data-act="tab" data-id="${a.id}">${ICON[a.icon]}<span>${a.name}</span>${a.id==='today'&&n?`<span class="n">${n}</span>`:''}</button>`).join('');
+  document.getElementById('tabs').innerHTML=TABS.map(a=>`<button class="tab" role="tab" aria-selected="${a.id===tab}" data-act="tab" data-id="${a.id}">${ICON[a.icon]}<span>${a.id==='more'?a.name:esc(L(a.id))}</span>${a.id==='today'&&n?`<span class="n">${n}</span>`:''}</button>`).join('');
 }
 
 function taskRow(id,t,o={}){
@@ -336,7 +418,7 @@ function taskRow(id,t,o={}){
   const sub=o.sub?(p?p.title:AREA_NAME[t.area]||''):'';
   let pips='';
   if(t.target>1)pips='<div class="pips">'+Array.from({length:t.target},(_,i)=>`<button class="pip${i<(t.count||0)?' on':''}" data-act="pip" data-id="${id}" data-i="${i}" aria-label="${i+1} из ${t.target}"></button>`).join('')+'</div>';
-  const trail=o.move?`<button class="pill-btn" data-act="today" data-id="${id}">Сегодня</button>`
+  const trail=o.move?`<button class="pill-btn" data-act="today" data-id="${id}">Сегодня</button>`:o.plan?`<button class="pill-btn ok" data-act="today" data-id="${id}" aria-label="Убрать из плана на сегодня">Убрать</button>`
     :`<button class="ib${onToday?' on':''}" data-act="today" data-id="${id}" aria-label="${onToday?'Убрать из плана':'В план на сегодня'}">${ICON.sun}</button>`;
   return `<div class="row${done?' done':''}" style="--c:${colorOf(p?p.subject:'')}">
     <button class="chk" data-act="toggle" data-id="${id}" aria-label="${done?'Снять отметку':'Готово'}">${ICON.check}</button>
@@ -353,22 +435,22 @@ function viewToday(){
   const todays=entries(D.tasks).filter(([,x])=>!x.archived&&(x.today===t||(x.today&&x.today<t&&isDone(x)))).sort((a,b)=>(isDone(a[1])-isDone(b[1]))||byOrder(a,b));
   const u=units(todays);
   const behind=entries(D.tasks).filter(([,x])=>!x.archived&&x.today&&x.today<t&&!isDone(x)).sort(byOrder);
-  const sched=scheduleFor(wd);
+  loadWeek(monday(now));
   const dn=doneIds(todays);
   return `
-  <div class="top"><div><h1>Сегодня</h1><p class="sub">${WD_FULL[wd]}, ${now.getDate()} ${MONTHS[now.getMonth()]}</p></div></div>
+  <div class="top"><div><h1>${esc(L('today'))}</h1><p class="sub">${WD_FULL[wd]}, ${now.getDate()} ${MONTHS[now.getMonth()]}</p></div></div>
   <div class="hero">
     <div class="grow">
       <div class="big">${u.d}<small> / ${u.n}</small></div>
       <p class="lbl">${u.n?'сделано за день':'план пока пустой'}</p>
-      ${sched.length?`<div class="chips">${sched.map(s=>`<span class="chip">${esc(s.subject)}${s.note?' · '+esc(s.note):''}</span>`).join('')}</div>`:''}
     </div>
     ${ring(u.d,u.n)}
   </div>
+  <section><div class="sh"><h2>Пары</h2></div>${pairsList(t)}</section>
   <section>
     <div class="sh"><h2>План</h2>${dn.length?`<button class="act" data-act="archive" data-ids="${dn.join(',')}">Убрать готовые</button>`:''}</div>
     <div class="card">
-      ${todays.map(([id,x])=>taskRow(id,x,{sub:true})).join('')}
+      ${todays.map(([id,x])=>taskRow(id,x,{sub:true,plan:true})).join('')}
       ${addRow('today-new','Новая задача','today')}
     </div>
     <button class="wide" data-act="sheet" data-type="pick">+ Из проектов</button>
@@ -394,7 +476,7 @@ function projCard(id,p){
   </div>`;
 }
 
-function areaBlock(area){
+function areaBlock(area,extra=''){
   const all=projList(area),active=all.filter(([,p])=>!p.later),later=all.filter(([,p])=>p.later);
   const loose=looseOf(area);
   const allTasks=entries(D.tasks).filter(([,t])=>{const p=t.projectId?D.projects[t.projectId]:null;return p?(p.area===area&&!p.later):t.area===area});
@@ -412,6 +494,7 @@ function areaBlock(area){
     </div>
     ${ring(u.d,u.n)}
   </div>
+  ${extra}
   ${chart.length>1?`<section><div class="sh"><h2>Прогресс</h2></div><div class="card chart">${chart.map(([k,g])=>`<div class="cr" style="--c:${g.c}"><span class="cl">${esc(k)}</span><span class="cn">${g.d}/${g.n}</span><div class="bar"><i style="width:${Math.round(g.d/g.n*100)}%"></i></div></div>`).join('')}</div></section>`:''}
   <section>
     <div class="sh"><h2>Проекты</h2><button class="act" data-act="sheet" data-type="new" data-area="${area}">+ Новый</button></div>
@@ -423,10 +506,10 @@ function areaBlock(area){
   </section>
   ${later.length?`<section><div class="sh"><h2>Отложено</h2></div>${later.map(([id,p])=>projCard(id,p)).join('')}</section>`:''}`;
 }
-function viewArea(area){return `<div class="top"><div><h1>Учёба</h1><p class="sub">1-й семестр</p></div></div>${areaBlock(area)}`}
+function viewArea(area){return `<div class="top"><div><h1>${esc(L('study'))}</h1>${L('studySub')?`<p class="sub">${esc(L('studySub'))}</p>`:''}</div></div>${areaBlock(area,weekBlock())}`}
 function viewLife(){
-  return `<div class="top"><h1>Жизнь</h1></div>
-  <div class="seg" role="group">${LIFE.map(a=>`<button aria-pressed="${a.id===lifeArea}" data-act="life" data-id="${a.id}">${a.name}</button>`).join('')}</div>
+  return `<div class="top"><h1>${esc(L('life'))}</h1></div>
+  <div class="seg" role="group">${LIFE.map(a=>`<button aria-pressed="${a.id===lifeArea}" data-act="life" data-id="${a.id}">${esc(L(a.id))}</button>`).join('')}</div>
   ${areaBlock(lifeArea)}`;
 }
 function themeGrid(f){
@@ -445,6 +528,7 @@ function viewMore(){
   <section><div class="card">
     <button class="li" data-act="sheet" data-type="archive"><span class="lt">Выполненные</span><span class="lv">${arch}</span>${ICON.chev}</button>
     <button class="li" data-act="sheet" data-type="schedule"><span class="lt">Расписание пар</span>${ICON.chev}</button>
+    <button class="li" data-act="sheet" data-type="labels"><span class="lt">Названия разделов</span>${ICON.chev}</button>
     <button class="li" data-act="sheet" data-type="backup"><span class="lt">Резервная копия</span><span class="lv">${lb}</span>${ICON.chev}</button>
   </div></section>
   ${standalone?'':`<section><div class="card pad"><p style="font-weight:600;margin-bottom:6px">Установить на iPhone</p><p class="rs" style="white-space:normal">Safari → «Поделиться» → «На экран Домой»</p></div></section>`}`;
@@ -459,7 +543,7 @@ function renderSheet(){
   if(sheet.type==='edit'&&!D.projects[sheet.pid]){closeSheet();return}
   const body=document.getElementById('sheet-body');const st=body.scrollTop;
   const a=document.activeElement;const keep=a&&a.id&&body.contains(a)?a.id:null;
-  const [title,html]=sheet.type==='edit'?sheetEdit(sheet.pid):sheet.type==='new'?sheetNew(sheet.area):sheet.type==='pick'?sheetPick():sheet.type==='archive'?sheetArchive():sheet.type==='schedule'?sheetSchedule():sheetBackup();
+  const [title,html]=sheet.type==='edit'?sheetEdit(sheet.pid):sheet.type==='new'?sheetNew(sheet.area):sheet.type==='pick'?sheetPick():sheet.type==='archive'?sheetArchive():sheet.type==='schedule'?sheetSchedule():sheet.type==='labels'?sheetLabels():sheetBackup();
   document.getElementById('sheet-title').textContent=title;
   body.innerHTML=html;wrap.hidden=false;body.scrollTop=st;
   if(keep){const el=document.getElementById(keep);if(el)el.focus({preventScroll:true})}
@@ -487,7 +571,7 @@ function sheetNew(area){
     <button class="wide solid" data-act="create" data-area="${area}">Создать</button>`];
 }
 function sheetPick(){
-  const t=T(),subj=scheduleFor(WD[new Date().getDay()]).map(s=>s.subject);
+  const t=T(),subj=subjectsToday();
   const ps=entries(D.projects).filter(([,p])=>!p.later).sort((a,b)=>(subj.includes(b[1].subject)-subj.includes(a[1].subject))||(a[1].area===b[1].area?0:a[1].area==='study'?-1:1)||byOrder(a,b));
   let html='';
   for(const[pid,p]of ps){
@@ -509,8 +593,20 @@ function sheetArchive(){
   return ['Выполненные',html+'</div><button class="wide danger" data-act="clear-arch">Очистить</button>'];
 }
 function sheetSchedule(){
-  return ['Расписание',`<div class="card">${WEEK.map(d=>`<div class="er"><b style="width:28px;color:var(--muted);font-size:14px">${WD_SHORT[d]}</b><input id="sch-${d}" data-sched="${d}" value="${esc(scheduleFor(d).map(s=>s.subject+(s.note?' · '+s.note:'')).join(', '))}" placeholder="нет пар" autocomplete="off"></div>`).join('')}</div>
+  const ok=D.rasp&&D.rasp.groupId;
+  return ['Расписание',`<p class="fl">Группа ДГТУ</p>
+  <div class="two"><input class="field" id="grp" value="${esc((D.rasp&&D.rasp.groupName)||'')}" placeholder="ШДК41" autocomplete="off"><button class="wide solid" style="margin:0" data-act="grp">${ok?'Обновить':'Подключить'}</button></div>
+  <p class="rs" style="white-space:normal;padding:8px 4px">${ok?'Пары загружаются с сайта ДГТУ автоматически':'Расписание не подключено'}</p>
+  <p class="fl">Запасное расписание (без интернета)</p>
+  <div class="card">${WEEK.map(d=>`<div class="er"><b style="width:28px;color:var(--muted);font-size:14px">${WD_SHORT[d]}</b><input id="sch-${d}" data-sched="${d}" value="${esc(scheduleFor(d).map(s=>s.subject+(s.note?' · '+s.note:'')).join(', '))}" placeholder="нет пар" autocomplete="off"></div>`).join('')}</div>
   <p class="rs" style="white-space:normal;padding:10px 4px">Предметы через запятую</p>`];
+}
+function sheetLabels(){
+  const f=(k,t)=>`<p class="fl">${t}</p><input class="field" id="lb-${k}" data-label="${k}" value="${esc(L(k).trim())}" placeholder="${esc(LABELS[k])}" autocomplete="off">`;
+  return ['Названия',`${f('today','Вкладка «Сегодня»')}${f('study','Вкладка «Учёба»')}${f('studySub','Подзаголовок учёбы')}${f('life','Вкладка «Жизнь»')}
+    <div class="two"><div>${f('work','Раздел 1')}</div><div>${f('health','Раздел 2')}</div></div>${f('personal','Раздел 3')}
+    <button class="wide solid" data-act="save-labels">Сохранить</button>
+    <p class="rs" style="white-space:normal;padding:10px 4px;text-align:center">Изменения применятся только после «Сохранить»</p>`];
 }
 function sheetBackup(){
   return ['Резервная копия',`<p class="rs" style="white-space:normal;padding:4px 4px 6px">Задачи хранятся только на этом телефоне. Сохраняй копию раз в неделю.</p>
@@ -588,6 +684,24 @@ document.addEventListener('click',async e=>{
     const pid=uid('p');D.projects[pid]={title,subject:document.getElementById('n-subj').value.trim(),area:b.dataset.area,day:'',deadline:'',later:false,note:'',order:Date.now()};
     save();open.add(pid);lsSet('planer.open',[...open]);sheet={type:'edit',pid};render();
     setTimeout(()=>document.getElementById('e-add')?.focus(),50);
+  }
+  if(act==='wk'){raspWeek+=+b.dataset.d;raspDay=null;render();return}
+  if(act==='rday'){raspDay=id;render();return}
+  if(act==='grp'){
+    const name=document.getElementById('grp').value.trim().toUpperCase();if(!name)return;
+    b.textContent='Ищу…';
+    try{
+      const r=await fetch(RASP_API+'raspGrouplist?year='+acYear());const j=await r.json();
+      const g=(j.data||[]).find(x=>String(x.name).toUpperCase()===name);
+      if(!g){toast('Группа не найдена');b.textContent='Подключить';return}
+      D.rasp={groupId:g.id,groupName:g.name};D.raspCache={};save();
+      await loadWeek(monday(new Date()),true);render();toast('Расписание '+g.name+' подключено');
+    }catch(e){toast('Нет связи с сайтом ДГТУ');b.textContent='Подключить'}
+    return;
+  }
+  if(act==='save-labels'){
+    const lb={};document.querySelectorAll('[data-label]').forEach(i=>{const v=i.value.trim();if(v&&v!==LABELS[i.dataset.label])lb[i.dataset.label]=v;if(!v&&i.dataset.label==='studySub')lb.studySub=' '});
+    D.labels=lb;save();closeSheet();toast('Названия сохранены');return;
   }
   if(act==='export'){
     const name='planer-'+T()+'.json',text=JSON.stringify(D);
