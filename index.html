@@ -130,6 +130,8 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .mv{font-size:12px;font-weight:700}
 .ml{font-size:12px;color:var(--ink);font-weight:600}
 .ml2{font-size:11px;color:var(--muted)}
+.warnx{color:var(--danger);font-weight:900;font-size:19px;line-height:1;margin-right:6px}
+.rs.late{color:var(--danger);font-weight:600}
 .hero .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .hero .chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--hero-ink) 14%,transparent);color:var(--hero-ink)}
 .ring{flex:none;width:76px;height:76px}
@@ -319,6 +321,7 @@ const ICON={
   book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"><rect x="4.5" y="5" width="15" height="10.5" rx="2"/><path d="M2.5 18.5h19"/></svg>',
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 20.2s-7.6-4.6-8.8-9.8C2.5 7.2 4.5 4.6 7.3 4.6c2 0 3.5 1.1 4.7 3 1.2-1.9 2.7-3 4.7-3 2.8 0 4.8 2.6 4.1 5.8-1.2 5.2-8.8 9.8-8.8 9.8z"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
   chev:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg>',
   x:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>'
 };
@@ -489,7 +492,7 @@ function sportBlock(){
 }
 function toggleWorkout(ds){
   if(!workoutOn(ds)||ds>T())return;
-  if(D.sport.log[ds])delete D.sport.log[ds];else D.sport.log[ds]=true;
+  if(D.sport.log[ds])delete D.sport.log[ds];else{D.sport.log[ds]=true;haptic()}
   save();render();
   if(D.sport.log[ds]){const {cur}=streaks();toast(cur>1?`Серия: ${cur} ${plural(cur,'тренировка','тренировки','тренировок')} подряд`:'Тренировка засчитана')}
 }
@@ -569,8 +572,22 @@ function weekBlock(){
     ${pairsList(raspDay)}</section>`;
 }
 
+/* ---------- перенос несделанного и вибрация ---------- */
+function carryOver(){
+  const t=T();let ch=false;
+  for(const x of Object.values(D.tasks)){
+    if(x.archived||!x.today||x.today>=t||isDone(x))continue;
+    const days=Math.max(1,Math.round((new Date(t+'T12:00')-new Date(x.today+'T12:00'))/864e5));
+    x.carry=(x.carry||0)+days;x.today=t;ch=true;
+  }
+  if(ch)save();
+}
+const hapticEl=(()=>{try{const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-200px;top:0;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);return l}catch(e){return null}})();
+function haptic(){try{if(navigator.vibrate&&navigator.vibrate(18))return;if(hapticEl)hapticEl.click()}catch(e){}}
+
 /* ---------- отрисовка ---------- */
 function render(withSheet=true){
+  carryOver();
   applyTheme();renderTabs();
   const v=document.getElementById('view');
   const a=document.activeElement;
@@ -590,11 +607,11 @@ function taskRow(id,t,o={}){
   const sub=o.sub?(p?p.title:AREA_NAME[t.area]||''):'';
   let pips='';
   if(t.target>1)pips='<div class="pips">'+Array.from({length:t.target},(_,i)=>`<button class="pip${i<(t.count||0)?' on':''}" data-act="pip" data-id="${id}" data-i="${i}" aria-label="${i+1} из ${t.target}"></button>`).join('')+'</div>';
-  const trail=o.move?`<button class="pill-btn" data-act="today" data-id="${id}">Сегодня</button>`:o.plan?`<button class="pill-btn ok" data-act="today" data-id="${id}" aria-label="Убрать из плана на сегодня">Убрать</button>`
+  const trail=o.move?`<button class="pill-btn" data-act="today" data-id="${id}">Сегодня</button>`:o.plan?`${done?'':`<button class="ib" data-act="tmrw" data-id="${id}" aria-label="Перенести на завтра" title="На завтра">${ICON.next}</button>`}<button class="pill-btn ok" data-act="today" data-id="${id}" aria-label="Убрать из плана на сегодня">Убрать</button>`
     :`<button class="ib${onToday?' on':''}" data-act="today" data-id="${id}" aria-label="${onToday?'Убрать из плана':'В план на сегодня'}">${ICON.sun}</button>`;
   return `<div class="row${done?' done':''}" style="--c:${colorOf(p?p.subject:'')}">
     <button class="chk" data-act="toggle" data-id="${id}" aria-label="${done?'Снять отметку':'Готово'}">${ICON.check}</button>
-    <button class="rm" data-act="toggle" data-id="${id}"><span class="rt">${esc(t.title)}</span>${sub?`<span class="rs">${esc(sub)}</span>`:''}</button>
+    <button class="rm" data-act="toggle" data-id="${id}"><span class="rt">${!done&&(t.carry||0)>=3?'<b class="warnx" aria-label="Откладывается">!</b>':''}${esc(t.title)}</span>${!done&&(t.carry||0)>=3?`<span class="rs late">переносится ${t.carry} ${plural(t.carry,'день','дня','дней')}${sub?' · '+esc(sub):''}</span>`:sub?`<span class="rs">${esc(sub)}</span>`:''}</button>
     ${pips}${trail}
   </div>`;
 }
@@ -854,10 +871,12 @@ document.addEventListener('click',async e=>{
   if(act==='theme'){D.theme=id;save();render();return}
   if(act==='toggle'&&t){
     if(t.target>0){const full=(t.count||0)>=t.target;t.count=full?0:t.target;t.done=!full}else t.done=!t.done;
+    if(isDone(t)){t.carry=0;haptic()}
     save();render();
   }
-  if(act==='pip'&&t){const i=+b.dataset.i;t.count=(t.count||0)===i+1?i:i+1;t.done=t.count>=t.target;save();render()}
-  if(act==='today'&&t){t.today=t.today===T()?'':T();save();render()}
+  if(act==='tmrw'&&t){t.today=ymd(addDays(new Date(),1));t.carry=(t.carry||0)+1;save();render();toast('Перенесено на завтра',()=>{t.today=T();t.carry=Math.max(0,(t.carry||1)-1);save();render()});return}
+  if(act==='pip'&&t){const i=+b.dataset.i,before=t.count||0;t.count=before===i+1?i:i+1;t.done=t.count>=t.target;if(t.count>before)haptic();if(t.done)t.carry=0;save();render()}
+  if(act==='today'&&t){t.today=t.today===T()?'':T();if(!t.today)t.carry=0;save();render()}
   if(act==='move-all'){const t0=T();for(const[,x]of entries(D.tasks))if(!x.archived&&x.today&&x.today<t0&&!isDone(x))x.today=t0;save();render()}
   if(act==='archive'){
     const ids=(b.dataset.ids||'').split(',').filter(i=>D.tasks[i]);const t0=T();
