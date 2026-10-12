@@ -8,27 +8,26 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Планер">
-<meta name="theme-color" content="#F4F5F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111219" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EFE8DD" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2A0F15" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Golos+Text:wght@400;500;600&display=swap">
 <style>
 /* Layout: app shell. Phone: bottom tab bar, one column. Wide: top tab bar, project sheets in a grid. */
 :root{
-  --bg:#F4F5F8; --surface:#FFFFFF; --ink:#1A1C27; --muted:#676C80; --line:#E2E4EC; --soft:#ECEEF4;
-  --accent:#3442D9; --accent-ink:#FFFFFF; --danger:#C93A3A;
-  --s1:#D9464C; --s2:#D98A12; --s3:#2E9369; --s4:#2F78D6; --s5:#8B4FCB; --s6:#C7448E; --s7:#1E95A8; --s8:#6E7D22;
-  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
-  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* палитра из референсов: винный фон картины, кремовая шляпа, лесной зелёный, томатный, шартрез, лиловый и кобальт упаковок */
+  --bg:#EFE8DD; --surface:#F8F4EC; --ink:#3A1219; --muted:#7D656A; --line:#E0D4C4; --soft:#E8DED0;
+  --accent:#6E1F2E; --accent-ink:#F8F4EC; --danger:#C2361F;
+  --s1:#D2442A; --s2:#8C8A12; --s3:#2F5B3A; --s4:#3D59B8; --s5:#7A62A8; --s6:#B8476A; --s7:#7A2A3E; --s8:#A6762A;
+  --f-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+  --f-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",system-ui,sans-serif;
   --r:14px; --navh:62px;
 }
 @media (prefers-color-scheme: dark){:root{
-  --bg:#111219; --surface:#1A1B24; --ink:#ECEDF4; --muted:#9A9EB3; --line:#2A2C39; --soft:#22242F;
-  --accent:#8E98FF; --accent-ink:#12131B; --danger:#F07070;
-  --s1:#F07A7E; --s2:#F2B14D; --s3:#5CC497; --s4:#6AA6F2; --s5:#B48AF0; --s6:#EE7DB9; --s7:#56C3D3; --s8:#AABD55;
+  --bg:#2A0F15; --surface:#3A1820; --ink:#F1E8DA; --muted:#C2A9A5; --line:#4E2630; --soft:#45202A;
+  --accent:#C9CB4A; --accent-ink:#2A0F15; --danger:#F07A5C;
+  --s1:#F0704F; --s2:#CFD055; --s3:#7FB08A; --s4:#8EA2E8; --s5:#B9A6E0; --s6:#E89AB0; --s7:#E0A0AE; --s8:#E0B56A;
   color-scheme:dark}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
@@ -57,10 +56,10 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(i
   .wrap{padding-bottom:64px}
 }
 
-h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
-h1{font-size:clamp(26px,6vw,36px);line-height:1.15}
-h2{font-size:17px}
-h3{font-size:15px;font-weight:500;line-height:1.3}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(30px,7vw,40px);line-height:1.1}
+h2{font-size:19px}
+h3{font-size:16px;font-weight:600;line-height:1.3}
 .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500;margin:0}
 .muted{color:var(--muted)}
 section{margin-top:28px}
@@ -150,6 +149,9 @@ details.later[open]>summary::before{transform:rotate(90deg)}
 .toast{position:fixed;left:50%;bottom:calc(var(--navh) + 14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 14px;border-radius:12px;display:flex;gap:14px;align-items:center;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
 @media (min-width:820px){.toast{bottom:24px}}
 .toast button{background:none;border:0;color:inherit;font-weight:600;text-decoration:underline}
+.donelink{align-self:flex-start;border:0;background:none;padding:2px 0;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.arch-day{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 4px}
+.arch-day:first-child{margin-top:0}
 .set-row{display:flex;flex-direction:column;gap:10px}
 .set-row .btns{display:flex;flex-wrap:wrap;gap:8px}
 .sched-row{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}
@@ -270,6 +272,11 @@ function setProj(id,patch){D.projects[id]={...D.projects[id],...patch};save();re
 const projList=area=>entries(D.projects).filter(([,p])=>p.area===area).sort(byOrder);
 const tasksOf=pid=>entries(D.tasks).filter(([,t])=>t.projectId===pid).sort(byOrder);
 const looseOf=area=>entries(D.tasks).filter(([,t])=>!t.projectId&&t.area===area).sort(byOrder);
+const live=([,t])=>!t.archived;
+const doneIds=list=>list.filter(([,t])=>!t.archived&&isDone(t)).map(([id])=>id);
+const archBtn=ids=>ids.length?`<button class="btn ghost" data-act="archive" data-ids="${ids.join(',')}">В выполненные (${ids.length})</button>`:'';
+const archCount=()=>Object.values(D.tasks).filter(t=>t.archived).length;
+const doneLink=()=>{const n=archCount();return n?`<button class="donelink" data-act="tab" data-id="settings">Выполненные: ${n} →</button>`:''};
 const isDone=t=>t.target>0?(t.count||0)>=t.target:!!t.done;
 function units(list){let d=0,n=0;for(const[,t]of list){if(t.target>0){n+=t.target;d+=Math.min(t.count||0,t.target)}else{n++;if(t.done)d++}}return{d,n}}
 function deadlineInfo(dl){
@@ -317,11 +324,11 @@ function taskRow(id,t,opts={}){
 
 function viewToday(){
   const now=new Date();const t=T();const wd=WD[now.getDay()];
-  const todays=entries(D.tasks).filter(([,x])=>x.today===t).sort((a,b)=>(isDone(a[1])-isDone(b[1]))||byOrder(a,b));
+  const todays=entries(D.tasks).filter(([,x])=>!x.archived&&(x.today===t||(x.today&&x.today<t&&isDone(x)))).sort((a,b)=>(isDone(a[1])-isDone(b[1]))||byOrder(a,b));
   const u=units(todays);
-  const behind=entries(D.tasks).filter(([,x])=>x.today&&x.today<t&&!isDone(x));
+  const behind=entries(D.tasks).filter(([,x])=>!x.archived&&x.today&&x.today<t&&!isDone(x));
   const sched=scheduleFor(wd);const subj=sched.map(s=>s.subject);
-  const pick=entries(D.tasks).filter(([,x])=>{if(isDone(x)||x.today===t)return false;const p=D.projects[x.projectId];return p&&!p.later&&p.subject&&subj.includes(p.subject)}).sort(byOrder).slice(0,8);
+  const pick=entries(D.tasks).filter(([,x])=>{if(x.archived||isDone(x)||x.today===t)return false;const p=D.projects[x.projectId];return p&&!p.later&&p.subject&&subj.includes(p.subject)}).sort(byOrder).slice(0,8);
   const groups={};for(const[id,p]of entries(D.projects).filter(([,p])=>!p.later).sort(byOrder)){(groups[p.area]=groups[p.area]||[]).push([id,p])}
   const select=`<select class="field" id="today-proj" aria-label="Куда относится задача"><option value="">Без проекта (Личное)</option>${AREAS.slice(1,5).map(a=>groups[a.id]?`<optgroup label="${a.name}">${groups[a.id].map(([id,p])=>`<option value="${id}">${esc((p.subject?p.subject+' — ':'')+p.title)}</option>`).join('')}</optgroup>`:'').join('')}</select>`;
   const daysSince=D.lastBackup?Math.round((new Date(t)-new Date(D.lastBackup))/864e5):null;
@@ -332,10 +339,11 @@ function viewToday(){
     <h1>${now.getDate()} ${MONTHS[now.getMonth()]}</h1>
     <div class="dayline">${sched.length?'<span class="muted" style="font-size:13px">Пары:</span>'+sched.map(s=>`<span class="pill" style="--c:${colorOf(s.subject)}">${esc(s.subject)}${s.note?' · '+esc(s.note):''}</span>`).join(''):'<span class="pill plain">Сегодня без пар</span>'}</div>
     ${todays.length?`<div class="meter"><div class="bar"><i style="width:${u.n?Math.round(u.d/u.n*100):0}%"></i></div><span class="num">сделано ${u.d} из ${u.n}</span></div>`:''}
+    ${doneLink()}
   </div>
   ${nudge}
   <section>
-    <div class="sec-head"><h2>План на день</h2><span class="muted">3–5 задач — нормальный день</span></div>
+    <div class="sec-head"><h2>План на день</h2>${archBtn(doneIds(todays))||'<span class="muted">3–5 задач — нормальный день</span>'}</div>
     <div class="card">
       ${todays.length?`<ul class="tasks">${todays.map(([id,x])=>taskRow(id,x,{showFrom:true,pre:'d'})).join('')}</ul>`:`<p class="muted" style="padding:4px 0 10px">Пока пусто. Добавь задачу ниже или нажми на солнце у любой задачи — она появится здесь.</p>`}
       <form class="addrow wrapsm" data-form="today" style="margin-top:10px">
@@ -355,7 +363,7 @@ function weekStrip(){
 }
 
 function sheet(id,p){
-  const ts=tasksOf(id);const u=units(ts);const c=colorOf(p.subject);const col=collapsed.has(id);
+  const ts=tasksOf(id);const u=units(ts);const shown=ts.filter(live);const c=colorOf(p.subject);const col=collapsed.has(id);
   return `<article class="sheet${col?' collapsed':''}" style="--c:${c}">
     <div class="sheet-top">
       <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
@@ -366,11 +374,12 @@ function sheet(id,p){
       <button class="ibtn" data-act="collapse" data-id="${id}" aria-label="${col?'Развернуть':'Свернуть'}" aria-expanded="${!col}">${col?ICON.chevr:ICON.chev}</button>
     </div>
     <div class="prog"><div class="bar"><i style="width:${u.n?Math.round(u.d/u.n*100):0}%"></i></div><span class="num">${u.d}/${u.n}</span></div>
-    ${ts.length?`<ul class="tasks">${ts.map(([tid,t])=>taskRow(tid,t)).join('')}</ul>`:''}
+    ${shown.length?`<ul class="tasks">${shown.map(([tid,t])=>taskRow(tid,t)).join('')}</ul>`:''}
     <form class="addrow" data-form="sub" data-id="${id}"><input type="text" id="add-${id}" placeholder="+ подзадача (можно «Эскизы — 3 шт»)" autocomplete="off" aria-label="Новая подзадача" enterkeyhint="done"></form>
     <div class="sheet-foot">
       <label>Дедлайн <input type="date" id="dl-${id}" value="${esc(p.deadline||'')}" data-act="deadline" data-id="${id}"></label>
       <span class="sp"></span>
+      ${archBtn(doneIds(ts))}
       <button class="btn ghost" data-act="later" data-id="${id}">${p.later?'Вернуть в работу':'Отложить'}</button>
       <button class="btn ghost" data-act="pdel" data-id="${id}">Удалить</button>
     </div>
@@ -379,7 +388,7 @@ function sheet(id,p){
 
 function viewArea(area){
   const all=projList(area);const active=all.filter(([,p])=>!p.later);const later=all.filter(([,p])=>p.later);
-  const loose=looseOf(area);
+  const loose=looseOf(area).filter(live);
   const allTasks=entries(D.tasks).filter(([,t])=>{const p=t.projectId?D.projects[t.projectId]:null;return p?(p.area===area&&!p.later):t.area===area});
   const u=units(allTasks);
   const subjects=[...new Set(Object.values(D.projects).filter(p=>p.area===area&&p.subject).map(p=>p.subject))];
@@ -388,13 +397,14 @@ function viewArea(area){
     <p class="eyebrow">${area==='study'?'1-й семестр':'Проекты и дела'}</p>
     <h1>${areaName(area)}</h1>
     ${u.n?`<div class="meter"><div class="bar"><i style="width:${Math.round(u.d/u.n*100)}%"></i></div><span class="num">${u.d} из ${u.n} · ${active.length} ${plural(active.length,'проект','проекта','проектов')}</span></div>`:''}
+    ${doneLink()}
   </div>
   <section>
     <div class="sec-head"><h2>В работе</h2></div>
     ${active.length?`<div class="grid">${active.map(([id,p])=>sheet(id,p)).join('')}</div>`:`<div class="empty"><b>Здесь пока нет проектов</b>${AREA_EMPTY[area]}</div>`}
   </section>
   <section>
-    <div class="sec-head"><h2>Разное</h2><span class="muted">мелкие дела без проекта</span></div>
+    <div class="sec-head"><h2>Разное</h2>${archBtn(doneIds(loose))||'<span class="muted">мелкие дела без проекта</span>'}</div>
     <div class="card">
       ${loose.length?`<ul class="tasks">${loose.map(([id,t])=>taskRow(id,t)).join('')}</ul>`:''}
       <form class="addrow" data-form="loose" data-area="${area}" ${loose.length?'style="margin-top:8px"':''}><input type="text" id="loose-${area}" placeholder="+ быстрое дело" autocomplete="off" aria-label="Быстрое дело" enterkeyhint="done"></form>
@@ -412,11 +422,24 @@ function viewArea(area){
   ${later.length?`<section><details class="later"><summary>Отложено <span class="pill plain">${later.length}</span></summary><div class="grid" style="margin-top:12px">${later.map(([id,p])=>sheet(id,p)).join('')}</div></details></section>`:''}`;
 }
 
+function archiveSection(){
+  const arch=entries(D.tasks).filter(([,t])=>t.archived).sort((a,b)=>(b[1].archivedAt||'').localeCompare(a[1].archivedAt||'')||byOrder(b,a));
+  if(!arch.length)return `<section><div class="sec-head"><h2>Выполненные</h2></div><div class="empty"><b>Пока пусто</b>Отмеченные дела остаются зачёркнутыми на месте. Кнопка «В выполненные» переносит их сюда.</div></section>`;
+  let html='',day='';
+  for(const[id,t]of arch.slice(0,300)){
+    const d=t.archivedAt||'';
+    if(d!==day){day=d;const[y,m,dd]=d.split('-').map(Number);html+=`<p class="arch-day">${d?dd+' '+MONTHS[m-1]:'раньше'}</p>`}
+    const p=t.projectId?D.projects[t.projectId]:null;const c=colorOf(p?p.subject:'');
+    html+=`<div class="task done" style="--c:${c}"><div class="tcol"><span class="from">${esc(p?(p.subject?p.subject+' · ':'')+p.title:areaName(t.area))}</span><span class="ttl" style="cursor:default">${esc(t.title)}</span></div><button class="btn ghost" data-act="unarchive" data-id="${id}">Вернуть</button></div>`;
+  }
+  return `<section><div class="sec-head"><h2>Выполненные</h2><span class="muted">${arch.length}</span></div><div class="card">${html}<div class="btns" style="margin-top:12px;display:flex"><button class="btn ghost" data-act="clear-arch">Очистить архив</button></div></div></section>`;
+}
 function viewSettings(){
   const lb=D.lastBackup?D.lastBackup.split('-').reverse().join('.'):'ещё не было';
   const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
   return `
-  <div class="hero"><p class="eyebrow">Настройки</p><h1>Ещё</h1></div>
+  <div class="hero"><p class="eyebrow">Архив и настройки</p><h1>Ещё</h1></div>
+  ${archiveSection()}
   <section>
     <div class="sec-head"><h2>Резервная копия</h2><span class="muted">последняя: ${lb}</span></div>
     <div class="card set-row">
@@ -446,6 +469,7 @@ function viewSettings(){
       <li>Утром открой «Сегодня» и выбери 3–5 задач: нажми на солнце у задачи в любом проекте.</li>
       <li>Сделала — ставь галочку. Для работ на несколько штук нажимай на кружки.</li>
       <li>Что не успела, на следующий день появится в «Не успела раньше».</li>
+      <li>Выполненные дела остаются зачёркнутыми. Кнопка «В выполненные» переносит их в архив наверху этой вкладки, оттуда любое дело можно вернуть.</li>
       <li>Название задачи можно исправить, нажав на текст.</li>
       <li>«Отложить» убирает проект вниз, в «Отложено», например журнал или диплом.</li>
     </ol></div>
@@ -525,6 +549,9 @@ document.addEventListener('click',async e=>{
     catch(err){const ta=document.getElementById('imp-text');ta.closest('details').open=true;ta.value=backupText();ta.select();toast('Выдели текст в поле и скопируй вручную')}
   }
   if(act==='import-text'){const v=document.getElementById('imp-text').value.trim();if(v)arm(b,'imp','Заменить всё?',()=>restore(v))}
+  if(act==='archive'){const ids=(b.dataset.ids||'').split(',').filter(id=>D.tasks[id]);const t0=T();ids.forEach(i=>{D.tasks[i]={...D.tasks[i],archived:true,archivedAt:t0}});save();render();toast((ids.length===1?'Дело перенесено':'Перенесено '+ids.length+' '+plural(ids.length,'дело','дела','дел'))+' в «Выполненные»',()=>{ids.forEach(i=>{if(D.tasks[i]){D.tasks[i].archived=false;delete D.tasks[i].archivedAt}});save();render()})}
+  if(act==='unarchive'&&t){const n={...t,archived:false};delete n.archivedAt;D.tasks[id]=n;save();render();toast('Дело вернулось в список')}
+  if(act==='clear-arch')arm(b,'clear','Удалить навсегда?',()=>{for(const[i,x]of entries(D.tasks))if(x.archived)delete D.tasks[i];save();render();toast('Архив очищен')});
   if(act==='reset')arm(b,'reset','Точно сбросить?',()=>{D=seed();save();tab='today';render();toast('Планер сброшен')});
 });
 document.addEventListener('change',e=>{
