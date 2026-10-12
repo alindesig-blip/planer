@@ -25,13 +25,15 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%;background:var(--bg);touch-action:manipulation;overscroll-behavior:none}
-body{margin:0;overscroll-behavior:none;touch-action:manipulation;-webkit-user-select:none;user-select:none;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.35;padding-top:env(safe-area-inset-top,0px)}
+html{-webkit-text-size-adjust:100%;background:var(--bg);touch-action:manipulation;overscroll-behavior:none;height:100%;overflow:hidden}
+body{margin:0;height:100%;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none;touch-action:manipulation;-webkit-user-select:none;user-select:none;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.35;padding-top:env(safe-area-inset-top,0px)}
 button,input,select,textarea{font:inherit;color:inherit}
 input,select,textarea{font-size:16px}
 button{cursor:pointer;border:0;background:none;padding:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
-.app{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:8px calc(var(--navh) + 32px + env(safe-area-inset-bottom,0px))}
+main.app{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.app>*{max-width:520px;margin-left:auto;margin-right:auto}
+.app{padding-inline:16px;padding-block:8px 32px}
 p{margin:0}
 h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 
@@ -165,8 +167,7 @@ section{margin-top:22px}
 .ib svg{width:20px;height:20px}
 .ib.on{color:var(--accent);background:var(--soft)}
 .pips{display:grid;gap:4px;flex:none;grid-auto-flow:row}
-.pips.many .pip{width:18px;height:18px}
-.pip{width:22px;height:22px;border-radius:50%;border:2px solid color-mix(in srgb,var(--c,var(--accent)) 60%,transparent)}
+.pip{width:20px;height:20px;border-radius:50%;border:2px solid color-mix(in srgb,var(--c,var(--accent)) 60%,transparent)}
 .pip.on{background:var(--c,var(--accent));border-color:var(--c,var(--accent))}
 .pill-btn{flex:none;font-size:14px;font-weight:600;color:var(--accent);background:var(--soft);padding:8px 12px;border-radius:12px}
 .pill-btn.ok{color:var(--muted);background:none}
@@ -223,7 +224,7 @@ section{margin-top:22px}
 .th span{font-size:13px;font-weight:600}
 
 /* нижняя панель */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs{position:relative;flex:none;z-index:5;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
 .tabs-in{display:grid;grid-template-columns:repeat(4,1fr);max-width:520px;margin:0 auto}
 .tab{height:var(--navh);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:600;position:relative}
 .tab svg{width:25px;height:25px}
@@ -242,7 +243,15 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(i
 .fl{font-size:13px;color:var(--muted);padding:14px 4px 6px;font-weight:600}
 .field{display:block;width:100%;border:0;background:var(--surface);border-radius:14px;padding:13px 14px;outline:none}
 .field:focus{box-shadow:0 0 0 2px var(--accent) inset}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.field{min-height:48px;-webkit-appearance:none;appearance:none}
+select.field{background-image:none}
+input[type=date].field{display:flex;align-items:center;text-align:left;line-height:22px}
+input[type=date].field::-webkit-date-and-time-value{text-align:left;margin:0}
+.dlrow{display:flex;gap:8px;align-items:center}
+.dlrow .field{flex:1;min-width:0}
+.dlx{flex:none;width:48px;height:48px;border-radius:14px;background:var(--surface);color:var(--muted);display:grid;place-items:center}
+.dlx svg{width:20px;height:20px}
 .er{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 14px;min-height:52px;position:relative}
 .er + .er::before{content:"";position:absolute;top:0;left:14px;right:0;border-top:1px solid var(--line)}
 .er input{flex:1;min-width:0;border:0;background:none;padding:8px 0;outline:none}
@@ -444,7 +453,7 @@ function miniRing(d,n){
   const p=n?d/n:0,C=2*Math.PI*21;
   return `<svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="21" fill="none" stroke-width="6" style="stroke:color-mix(in srgb,var(--ink) 10%,transparent)"/><circle cx="26" cy="26" r="21" fill="none" stroke-width="6" stroke-linecap="round" style="stroke:var(--accent)" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 26 26)"/><text x="26" y="31" text-anchor="middle" style="fill:var(--ink);font:700 12px var(--font)">${Math.round(p*100)}%</text></svg>`;
 }
-let sportWeek=0,sportDay=null;
+let sportWeek=0,sportDay=null,sportMonth=0;
 function sportBlock(){
   const t=T(),now=new Date(),{cur,best}=streaks(),Y=now.getFullYear(),M=now.getMonth();
   const ms=monthStats(Y,M);
@@ -454,10 +463,11 @@ function sportBlock(){
   const plate=w?`<div class="wplate"><div class="grow"><div class="big2">${esc(wName(w))}</div><p class="rs">${WD_FULL[WD[sd.getDay()]]}, ${sd.getDate()} ${MONTHS[sd.getMonth()]}${st==='missed'?' · <span style="color:var(--danger)">пропущена</span>':''}</p></div>
       ${st==='future'?`<button class="wcheck" disabled>Впереди</button>`:`<button class="wcheck${st==='done'?' ok':''}" data-act="wdone" data-id="${sportDay}">${st==='done'?'✓ '+esc(L('t_was')):esc(L('t_mark'))}</button>`}</div>`
     :`<p class="empty">${esc(L('t_rest'))}</p>`;
-  // календарь месяца
-  const first=new Date(Y,M,1,12),lead=(first.getDay()+6)%7,nd=new Date(Y,M+1,0).getDate();
+  // календарь выбранного месяца
+  const cm=new Date(Y,M+sportMonth,1,12),CY=cm.getFullYear(),CM=cm.getMonth(),cms=monthStats(CY,CM);
+  const first=cm,lead=(first.getDay()+6)%7,nd=new Date(CY,CM+1,0).getDate();
   let cal=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(x=>`<span class="mh">${x}</span>`).join('')+'<span></span>'.repeat(lead);
-  for(let i=1;i<=nd;i++){const ds=`${Y}-${pad(M+1)}-${pad(i)}`,ww=workoutOn(ds),s2=wStatus(ds);
+  for(let i=1;i<=nd;i++){const ds=`${CY}-${pad(CM+1)}-${pad(i)}`,ww=workoutOn(ds),s2=wStatus(ds);
     const cls=s2==='done'?'c-done':s2==='missed'?'c-miss':s2==='today'?'c-today':s2==='future'?'c-plan':'';
     cal+=`<span class="mc ${cls}">${i}${ww?`<i>${s2==='done'?'✓':esc(wShort(ww))}</i>`:''}</span>`}
   // история по месяцам
@@ -483,11 +493,12 @@ function sportBlock(){
     <div class="days">${days.map(x=>{const k=ymd(x),ww=workoutOn(k),s2=wStatus(k);return `<button class="dchip${s2==='done'?' w-done':s2==='missed'?' w-missed':''}" aria-pressed="${k===sportDay}" data-act="sday" data-id="${k}">${WD_SHORT[WD[x.getDay()]]}<b>${x.getDate()}</b><span class="lab">${ww?(s2==='done'?'✓':esc(wShort(ww))):''}</span></button>`}).join('')}</div>
     <div class="card">${plate}</div>
   </section>
-  <section><div class="sh"><h2>${MONTHS_NOM[M]}</h2><span class="rs">${pct(ms)}% ${esc(L('t_done_pct'))}</span></div>
-    <div class="card">
+  <section><div class="sh"><h2>${MONTHS_NOM[CM]}${CY!==Y?' '+CY:''}</h2><span class="rs">${cms.planned||cms.left?pct(cms)+'% '+esc(L('t_done_pct')):''}</span></div>
+    <div class="card" id="mcard">
+      <div class="wk" style="padding:12px 12px 0"><button data-act="smon" data-d="-1" aria-label="Предыдущий месяц">‹</button><span>${sportMonth===0?'Этот месяц':MONTHS_NOM[CM]+' '+CY}</span><button data-act="smon" data-d="1" aria-label="Следующий месяц">›</button></div>
       <div class="mcal">${cal}</div>
-      <div class="rings">${['up','low'].map(g=>{const b=ms.by[g];return `<div class="rcard">${miniRing(b.d,b.t)}<div><b>${esc(L('g_'+g))}</b><span>${b.d} из ${b.t}</span></div></div>`}).join('')}</div>
-      ${ms.missList.length?`<p class="fl" style="padding:0 16px 8px">${esc(L('t_missed'))}</p><div class="mchips">${ms.missList.map(([ds,ww])=>{const x=new Date(ds+'T12:00');return `<span class="mchip">${x.getDate()} ${MONTHS[x.getMonth()]} · ${esc(wName(ww))}</span>`}).join('')}</div>`:''}
+      <div class="rings">${['up','low'].map(g=>{const b=cms.by[g];return `<div class="rcard">${miniRing(b.d,b.t)}<div><b>${esc(L('g_'+g))}</b><span>${b.d} из ${b.t}</span></div></div>`}).join('')}</div>
+      ${cms.missList.length?`<p class="fl" style="padding:0 16px 8px">${esc(L('t_missed'))}</p><div class="mchips">${cms.missList.map(([ds,ww])=>{const x=new Date(ds+'T12:00');return `<span class="mchip">${x.getDate()} ${MONTHS[x.getMonth()]} · ${esc(wName(ww))}</span>`}).join('')}</div>`:''}
     </div>
   </section>
   <section><div class="sh"><h2>${esc(L('h_months'))}</h2>${bestM?`<span class="rs">лучший — ${MONTHS_NOM[bestM.m].toLowerCase()}</span>`:''}</div>
@@ -620,7 +631,7 @@ function taskRow(id,t,o={}){
   </div>`;
 }
 function addRow(id,ph,form,extra=''){
-  return `<form class="add" data-form="${form}" ${extra}><span class="plus" aria-hidden="true">+</span><input type="text" id="${id}" placeholder="${ph}" autocomplete="off" enterkeyhint="done" aria-label="${ph}"></form>`;
+  return `<form class="add" data-form="${form}" ${extra}><button type="submit" class="plus" aria-label="Добавить">+</button><input type="text" id="${id}" placeholder="${ph}" autocomplete="off" enterkeyhint="done" aria-label="${ph}"></form>`;
 }
 
 function viewToday(){
@@ -751,7 +762,7 @@ function sheetEdit(pid){
     <div class="two"><div><p class="fl">${p.area==='study'?'Предмет':'Категория'}</p><input class="field" id="e-subj" data-pedit="subject" value="${esc(p.subject)}" list="subj-list"></div>
     <div><p class="fl">День</p><select class="field" id="e-day" data-pedit="day"><option value="">—</option>${WEEK.map(d=>`<option${p.day===WD_SHORT[d]?' selected':''}>${WD_SHORT[d]}</option>`).join('')}</select></div></div>
     <datalist id="subj-list">${[...new Set(Object.values(D.projects).map(x=>x.subject).filter(Boolean))].map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
-    <p class="fl">Дедлайн</p><input class="field" type="date" id="e-dl" data-pedit="deadline" value="${esc(p.deadline||'')}">
+    <p class="fl">Дедлайн</p><div class="dlrow"><input class="field" type="date" id="e-dl" data-pedit="deadline" value="${esc(p.deadline||'')}">${p.deadline?`<button class="dlx" data-act="dlclear" data-id="${pid}" aria-label="Убрать дедлайн">${ICON.x}</button>`:''}</div>
     <p class="fl">Задачи</p>
     <div class="card">${ts.map(t=>`<div class="er"><input id="et-${t[0]}" data-edit="title" data-id="${t[0]}" value="${esc(t[1].title)}" aria-label="Задача">${tgt(t)}<button class="ib danger" data-act="del" data-id="${t[0]}" aria-label="Удалить задачу">${ICON.x}</button></div>`).join('')}
     ${addRow('e-add',esc(L('t_newtask')),'sub',`data-id="${pid}"`)}</div>
@@ -867,10 +878,11 @@ function markBackup(){D.lastBackup=T();save();render()}
 document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;
   const act=b.dataset.act,id=b.dataset.id,t=D.tasks[id];
-  if(act==='tab'){tab=id;lsSet('planer.tab',tab);window.scrollTo(0,0);render();return}
+  if(act==='tab'){tab=id;lsSet('planer.tab',tab);document.getElementById('view').scrollTop=0;render();return}
   if(act==='life'){lifeArea=id;lsSet('planer.life2',id);render();return}
   if(act==='close'){closeSheet();return}
   if(act==='sheet'){openSheet({type:b.dataset.type,pid:id,area:b.dataset.area,later:!!b.dataset.later});return}
+  if(act==='dlclear'){const p=D.projects[id];if(p){p.deadline='';save();render()}return}
   if(act==='expand'){open.has(id)?open.delete(id):open.add(id);lsSet('planer.open',[...open]);render();return}
   if(act==='theme'){D.theme=id;save();render();return}
   if(act==='toggle'&&t){
@@ -908,6 +920,7 @@ document.addEventListener('click',async e=>{
     setTimeout(()=>document.getElementById('e-add')?.focus(),50);
   }
   if(act==='wdone'){toggleWorkout(id);return}
+  if(act==='smon'){sportMonth+=+b.dataset.d;render();return}
   if(act==='swk'){sportWeek+=+b.dataset.d;sportDay=null;render();return}
   if(act==='sday'){sportDay=id;render();return}
   if(act==='save-sport'){
@@ -953,7 +966,7 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('change',e=>{
   const el=e.target;
-  if(el.dataset.pedit){const p=D.projects[sheet&&sheet.pid];if(p){p[el.dataset.pedit]=el.value.trim();save();render(false)}}
+  if(el.dataset.pedit){const p=D.projects[sheet&&sheet.pid];if(p){p[el.dataset.pedit]=el.value.trim();save();render(el.dataset.pedit==='deadline')}}
   if(el.dataset.edit==='title'){const t=D.tasks[el.dataset.id];const v=el.value.trim();if(t&&v){t.title=v;save();render(false)}else if(t)el.value=t.title}
   if(el.dataset.edit==='target'){const t=D.tasks[el.dataset.id];if(t){const n=+el.value;t.target=n>1?n:0;t.count=Math.min(t.count||0,t.target);t.done=t.target?t.count>=t.target:!!t.done;save();render(false)}}
   if(el.dataset.sched){D.schedule=D.schedule||{days:{}};D.schedule.days[el.dataset.sched]=el.value.split(',').map(s=>s.trim()).filter(Boolean).map(s=>{const[subject,note]=s.split('·').map(x=>x.trim());return note?{subject,note}:{subject}});save();render(false)}
@@ -967,8 +980,11 @@ document.addEventListener('submit',e=>{
   if(k==='today')ok=newTask({area:'personal',today:T()},v);
   if(k==='sub'){const p=D.projects[f.dataset.id];ok=newTask({projectId:f.dataset.id,area:p?p.area:''},v)}
   if(k==='loose')ok=newTask({area:f.dataset.area},v);
-  if(ok){i.value='';render();const n=document.getElementById(i.id);if(n){n.value='';n.focus()}}
+  if(ok){i.value='';render();const n=document.getElementById(i.id);if(n){n.value='';n.focus()}}else i.focus();
 });
+let swipeX=null,swipeY=null;
+document.addEventListener('touchstart',e=>{const c=e.target.closest&&e.target.closest('#mcard');if(c&&e.touches.length===1){swipeX=e.touches[0].clientX;swipeY=e.touches[0].clientY}else swipeX=null},{passive:true});
+document.addEventListener('touchend',e=>{if(swipeX==null)return;const t0=e.changedTouches[0],dx=t0.clientX-swipeX,dy=t0.clientY-swipeY;swipeX=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){sportMonth+=dx<0?1:-1;render()}},{passive:true});
 let lastDay=T();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&T()!==lastDay){lastDay=T();render()}});
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
